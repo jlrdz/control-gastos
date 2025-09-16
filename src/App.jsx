@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { useSupabaseFetch } from "./hooks/database/useSupabaseFetch";
+import Filters from "./components/Filters";
+import ExpensesTable from "./components/ExpensesTable";
+import ExpensesSummary from "./components/ExpensesSummary";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { loading, data: expenses, error, fetchData } = useSupabaseFetch();
+  const [filters, setFilters] = useState([]);
+
+  useEffect(() => {
+    fetchData(
+      "expenses",
+      "id, fecha, descripcion, monto, moneda, forma_pago, categories(nombre)",
+      { orderBy: { column: "fecha", ascending: false } },
+      filters
+    );
+  }, [filters, fetchData]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Expenses</h1>
+      <Filters onApply={setFilters} />
+      <ExpensesTable expenses={expenses || []} loading={loading} error={error} />
+      <ExpensesSummary expenses={expenses || []} />
+    </div>
+  );
 }
 
-export default App
+export default App;

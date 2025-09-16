@@ -1,4 +1,4 @@
-import { constants } from "../../utils/constants";
+import { constants } from "../../config/constants";
 
 function PaymentMethodSelect({ value, onChange }) {
     const paymentMethods = [...constants.paymentMethods].sort((a, b) =>

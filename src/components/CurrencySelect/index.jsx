@@ -1,4 +1,4 @@
-import { constants } from "../../utils/constants";
+import { constants } from "../../config/constants";
 
 function CurrencySelect({ value, onChange }) {
     const currencies = [...constants.currencies].sort((a, b) =>

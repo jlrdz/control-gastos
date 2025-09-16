@@ -12,7 +12,7 @@ function App() {
     fetchData(
       "expenses",
       "id, fecha, descripcion, monto, moneda, forma_pago, categories(nombre)",
-      { orderBy: { column: "fecha", ascending: false } },
+      { orderBy: { column: "fecha", ascending: true } },
       filters
     );
   }, [filters, fetchData]);

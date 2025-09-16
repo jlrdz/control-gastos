@@ -28,7 +28,7 @@ function ExpensesTable({ expenses, loading, error }) {
             <tbody>
                 {expenses.map((exp) => (
                     <tr key={exp.id}>
-                        <td>{formatDate(exp.fecha)}</td>
+                        <td>{formatDate(exp.fecha, "es-cr")}</td>
                         <td>{exp.descripcion}</td>
                         <td>{formatNumber(exp.monto)}</td>
                         <td>{exp.moneda}</td>

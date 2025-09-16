@@ -18,7 +18,7 @@ export const APP_CONFIG = {
     // Pagination configuration for tables and lists.
     // Defines the default number of items per page and the selectable options.
     pagination: {
-        defaultPageSize: 20,
+        defaultPageSize: 10,
         pageSizeOptions: [10, 20, 50, 100],
     },
 };

@@ -1,26 +1,35 @@
 import { useState, useCallback } from "react";
 import { supabase } from "../../database/supabaseClient";
 
+/**
+ * Custom hook to fetch data from Supabase with optional
+ * ordering, filters, and pagination.
+ */
 export function useSupabaseFetch() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
+    const [totalCount, setTotalCount] = useState(0); // 🔹 track total rows for pagination
 
+    /**
+     * Fetch data from a Supabase table.
+    */
     const fetchData = useCallback(
-        async (table, select = "*", options = {}, filters = []) => {
+        async (table, select = "*", options = {}, filters = [], range = null) => {
             setLoading(true);
             setError(null);
 
             try {
-                let query = supabase.from(table).select(select);
+                // Base query with exact count (needed for pagination)
+                let query = supabase.from(table).select(select, { count: "exact" });
 
-                // 🔹 Aplicar orden si viene en options
+                // Apply ordering if provided
                 if (options.orderBy) {
                     const { column, ascending = true } = options.orderBy;
                     query = query.order(column, { ascending });
                 }
 
-                // 🔹 Aplicar filtros dinámicos
+                // Apply dynamic filters
                 filters.forEach((f) => {
                     switch (f.operator) {
                         case "eq":
@@ -40,13 +49,22 @@ export function useSupabaseFetch() {
                     }
                 });
 
-                const { data, error } = await query;
+                // Apply pagination range if provided
+                if (range) {
+                    query = query.range(range.from, range.to);
+                }
+
+                // Execute query
+                const { data, error, count } = await query;
 
                 if (error) throw error;
+
                 setData(data);
+                setTotalCount(count ?? 0); // store total rows (needed for totalPages)
             } catch (err) {
                 setError(err);
                 setData(null);
+                setTotalCount(0);
             } finally {
                 setLoading(false);
             }
@@ -54,5 +72,5 @@ export function useSupabaseFetch() {
         []
     );
 
-    return { loading, data, error, fetchData };
+    return { loading, data, error, totalCount, fetchData };
 }

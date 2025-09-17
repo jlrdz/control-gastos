@@ -1,0 +1,18 @@
+@use "./variables" as v;
+
+// Button base style
+@mixin button-base($bg, $bg-hover) {
+    background: $bg;
+    border: none;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background v.$transition-normal, transform v.$transition-fast;
+
+    &:hover {
+        background: $bg-hover;
+        transform: translateY(-1px);
+    }
+}

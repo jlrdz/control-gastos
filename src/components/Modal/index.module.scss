@@ -1,0 +1,56 @@
+@use "../../styles/variables" as v;
+@use "../../styles/mixins" as m;
+
+/* ===== Base dialog styles with subtle glow ===== */
+.dialog {
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: linear-gradient(180deg, v.$color-bg-dark 0%, v.$color-bg-darker 100%);
+    box-shadow: v.$shadow-main, v.$shadow-glow;
+    width: 400px;
+    max-width: 90%;
+    z-index: 1000;
+    overscroll-behavior: contain;
+    overflow-x: hidden;
+    /* prevent scroll chaining inside modal */
+}
+
+/* ===== Backdrop styles ===== */
+:global(dialog)::backdrop {
+    pointer-events: none;
+    /* backdrop does not block clicks */
+    background-color: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    /* blur effect for modern browsers */
+}
+
+/* ===== Header ===== */
+.header {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: v.$color-text-strong;
+}
+
+/* ===== Content wrapper ===== */
+.content {
+    margin-bottom: 1rem;
+    color: v.$color-text;
+}
+
+/* ===== Footer ===== */
+.footer {
+    text-align: right;
+}
+
+/* ===== Close button ===== */
+.closeBtn {
+    @include m.button-base(v.$color-danger, v.$color-danger-hover);
+}
+
+/* ===== Trigger button ===== */
+.triggerBtn {
+    @include m.button-base(v.$color-primary, v.$color-primary-hover);
+}

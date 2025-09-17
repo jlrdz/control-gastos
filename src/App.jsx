@@ -4,6 +4,8 @@ import { usePagination } from "./hooks/usePagination";
 import Filters from "./components/Filters";
 import ExpensesTable from "./components/ExpensesTable";
 import ExpensesSummary from "./components/ExpensesSummary";
+import Modal from "./components/Modal";
+import ExpenseForm from "./components/ExpenseForm";
 
 function App() {
   // Custom hook to fetch data from Supabase
@@ -44,10 +46,15 @@ function App() {
 
       {/* Filters section (applies filters to the query) */}
       <Filters onApply={setFilters} />
-      
+
       {/* Summary of expenses (totals, counts, etc.) */}
       <ExpensesSummary expenses={expenses || []} />
-      
+
+      {/* Modal wrapper for adding a new expense */}
+       <Modal title="Add Expense" triggerText="+ Add Expense">
+        <ExpenseForm onSuccess={fetchData} closeModal={() => {}} />
+      </Modal>
+
       {/* Expenses table with pagination controls */}
       <ExpensesTable
         expenses={expenses || []}

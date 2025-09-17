@@ -1,0 +1,79 @@
+@use "../../styles/variables" as v;
+@use "../../styles/mixins" as m;
+
+/* ===== Form wrapper ===== */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ===== Label ===== */
+.label {
+    font-size: 0.9rem;
+    color: v.$color-text;
+    margin-bottom: 0.25rem;
+}
+
+/* ===== Inputs & Selects (unified style) ===== */
+.input,
+.select {
+    width: 100%;
+    /* all fields same width */
+    box-sizing: border-box;
+    /* includes padding + border in width */
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: v.$color-text-strong;
+    font-size: 0.9rem;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border: 1px solid v.$color-primary;
+        box-shadow: 0 0 6px rgba(25, 118, 210, 0.6);
+    }
+}
+
+/* Normalize date input */
+.input[type="date"] {
+    min-height: 2.25rem;
+    /* match other inputs */
+    line-height: normal;
+}
+
+/* ===== Custom select styling ===== */
+.select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='white' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.65rem auto;
+    padding-right: 1.75rem;
+    /* space for arrow */
+    cursor: pointer;
+}
+
+/* ===== Error message ===== */
+.error {
+    color: v.$color-danger;
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+}
+
+/* ===== Submit button ===== */
+.submitBtn {
+    @include m.button-base(v.$color-primary, v.$color-primary-hover);
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    align-self: flex-end;
+    /* aligns to right, like modal Close */
+}
+
+.submitBtn:disabled {
+    background: #444;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

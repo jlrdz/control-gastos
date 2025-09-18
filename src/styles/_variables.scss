@@ -6,8 +6,10 @@ $color-text-strong: #fff;
 
 // Accent colors
 $color-primary: #1976d2;
+$color-primary-gradient: linear-gradient(145deg, #1976d2, #135ba4);
 $color-primary-hover: #125aa1;
 $color-danger: #f44336;
+$color-danger-gradient: linear-gradient(145deg, #d32f2f, #a72828);
 $color-danger-hover: #d32f2f;
 
 // ===== Effects =====
@@ -17,3 +19,11 @@ $shadow-glow: 0 0 12px rgba(255, 255, 255, 0.15);
 // ===== Transitions =====
 $transition-fast: 0.15s ease;
 $transition-normal: 0.2s ease;
+
+// Base tipography
+$font-family-base: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+$font-regular: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;

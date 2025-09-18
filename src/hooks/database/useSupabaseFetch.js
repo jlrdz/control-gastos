@@ -4,16 +4,18 @@ import { supabase } from "../../database/supabaseClient";
 /**
  * Custom hook to fetch data from Supabase with optional
  * ordering, filters, and pagination.
+ * - Keeps internal state (loading, data, error, totalCount).
+ * - Each fetchData call also returns { data, error, count } for consistency.
  */
 export function useSupabaseFetch() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
-    const [totalCount, setTotalCount] = useState(0); // 🔹 track total rows for pagination
+    const [totalCount, setTotalCount] = useState(0);
 
     /**
      * Fetch data from a Supabase table.
-    */
+     */
     const fetchData = useCallback(
         async (table, select = "*", options = {}, filters = [], range = null) => {
             setLoading(true);
@@ -23,13 +25,13 @@ export function useSupabaseFetch() {
                 // Base query with exact count (needed for pagination)
                 let query = supabase.from(table).select(select, { count: "exact" });
 
-                // Apply ordering if provided
+                // Apply ordering
                 if (options.orderBy) {
                     const { column, ascending = true } = options.orderBy;
                     query = query.order(column, { ascending });
                 }
 
-                // Apply dynamic filters
+                // Apply filters
                 filters.forEach((f) => {
                     switch (f.operator) {
                         case "eq":
@@ -49,7 +51,7 @@ export function useSupabaseFetch() {
                     }
                 });
 
-                // Apply pagination range if provided
+                // Apply pagination
                 if (range) {
                     query = query.range(range.from, range.to);
                 }
@@ -60,11 +62,14 @@ export function useSupabaseFetch() {
                 if (error) throw error;
 
                 setData(data);
-                setTotalCount(count ?? 0); // store total rows (needed for totalPages)
+                setTotalCount(count ?? 0);
+
+                return { data, error: null, count };
             } catch (err) {
                 setError(err);
                 setData(null);
                 setTotalCount(0);
+                return { data: null, error: err, count: 0 };
             } finally {
                 setLoading(false);
             }

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSupabaseFetch } from "../../hooks/database/useSupabaseFetch";
 
-function CategorySelect({ value, onChange, showAll = true, className }) {
+function CategorySelect({ value, onChange, showAll = true, className, placeholder }) {
     const { loading, data: categories, error, fetchData } = useSupabaseFetch();
 
     useEffect(() => {
@@ -18,7 +18,13 @@ function CategorySelect({ value, onChange, showAll = true, className }) {
             required
             className={className}
         >
+            {/* Optional placeholder */}
+            {placeholder && <option value="">{placeholder}</option>}
+
+            {/* "All" option */}
             {showAll && <option value="all">All</option>}
+
+            {/* Loading / Error / Data */}
             {loading && <option disabled>Loading...</option>}
             {error && <option disabled>Error loading</option>}
             {categories?.map((cat) => (

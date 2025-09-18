@@ -1,4 +1,5 @@
 import { APP_CONFIG } from "../../config/appConfig";
+import styles from "./index.module.scss";
 
 /**
  * Pagination component with:
@@ -20,7 +21,7 @@ export default function Pagination({
     // Helper to build an array of visible page numbers with ellipsis
     const getPageNumbers = () => {
         const pages = [];
-        const maxVisible = 5; // max number of visible page buttons
+        const maxVisible = 5;
         const half = Math.floor(maxVisible / 2);
 
         if (totalPages <= maxVisible) {
@@ -30,16 +31,16 @@ export default function Pagination({
                 for (let i = 1; i <= maxVisible; i++) pages.push(i);
                 pages.push("...", totalPages);
             } else if (currentPage >= totalPages - half) {
-                pages.push(1, "...");
+                pages.push(1, "…");
                 for (let i = totalPages - (maxVisible - 1); i <= totalPages; i++) {
                     pages.push(i);
                 }
             } else {
-                pages.push(1, "...");
+                pages.push(1, "…");
                 for (let i = currentPage - 1; i <= currentPage + 1; i++) {
                     pages.push(i);
                 }
-                pages.push("...", totalPages);
+                pages.push("…", totalPages);
             }
         }
 
@@ -51,33 +52,28 @@ export default function Pagination({
     const endRecord = Math.min(currentPage * pageSize, totalCount);
 
     return (
-        <div
-            className="pagination"
-            style={{
-                marginTop: "1rem",
-                display: "flex",
-                gap: "0.5rem",
-                alignItems: "center",
-                flexWrap: "wrap",
-            }}
-        >
+        <div className={styles.pagination}>
             {/* Prev button */}
-            <button disabled={currentPage === 1} onClick={prevPage}>
+            <button
+                disabled={currentPage === 1}
+                onClick={prevPage}
+                className={styles.pageBtn}
+            >
                 Prev
             </button>
 
             {/* Page number buttons */}
             {getPageNumbers().map((page, index) =>
-                page === "..." ? (
-                    <span key={index}>…</span>
+                page === "…" ? (
+                    <span key={index} className={styles.ellipsis}>
+                        …
+                    </span>
                 ) : (
                     <button
                         key={`page-${page}-${index}`}
                         onClick={() => goToPage(page)}
-                        style={{
-                            fontWeight: page === currentPage ? "bold" : "normal",
-                            background: page === currentPage ? "#ddd" : "transparent",
-                        }}
+                        className={`${styles.pageBtn} ${page === currentPage ? styles.active : ""
+                            }`}
                     >
                         {page}
                     </button>
@@ -85,15 +81,23 @@ export default function Pagination({
             )}
 
             {/* Next button */}
-            <button disabled={currentPage === totalPages} onClick={nextPage}>
+            <button
+                disabled={currentPage === totalPages}
+                onClick={nextPage}
+                className={styles.pageBtn}
+            >
                 Next
             </button>
 
             {/* Page size selector */}
-            <select value={pageSize} onChange={(e) => {
-                setPageSize(Number(e.target.value));
-                goToPage(1);
-            }}>
+            <select
+                value={pageSize}
+                onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    goToPage(1);
+                }}
+                className={styles.pageSize}
+            >
                 {APP_CONFIG.pagination.pageSizeOptions.map((size) => (
                     <option key={size} value={size}>
                         {size} / page
@@ -102,7 +106,7 @@ export default function Pagination({
             </select>
 
             {/* Records info */}
-            <span style={{ marginLeft: "1rem" }}>
+            <span className={styles.info}>
                 Showing {startRecord}-{endRecord} of {totalCount} records
             </span>
         </div>

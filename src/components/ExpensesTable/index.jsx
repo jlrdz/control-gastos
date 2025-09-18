@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { formatNumber, formatDate } from "../../utils/format";
 import Pagination from "../Pagination";
+import { useExpensesTable } from "../../hooks/useExpensesTable";
+import Modal from "../Modal";
+import styles from "./index.module.scss";
 
 function ExpensesTable({
     expenses,
@@ -12,27 +16,27 @@ function ExpensesTable({
     setPageSize,
     goToPage,
     nextPage,
-    prevPage
+    prevPage,
+    onDeleteSuccess,
+    onEdit,
+    onAdd,
 }) {
-    // Show loading state
-    if (loading) {
-        return <p>Loading expenses...</p>;
-    }
+    const { handleDelete, deleting } = useExpensesTable({ onDeleteSuccess });
+    const [selectedId, setSelectedId] = useState(null);
 
-    // Show error message if query fails
-    if (error) {
-        return <p>Error: {error.message}</p>;
-    }
-
-    // Show empty state when there are no results
-    if (!expenses || expenses.length === 0) {
-        return <p>No expenses found</p>;
-    }
+    if (loading) return <p>Loading expenses...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+    if (!expenses || expenses.length === 0) return <p>No expenses found</p>;
 
     return (
-        <div>
-            {/* Expenses table */}
-            <table border="1" cellPadding="5" style={{ marginTop: "1rem", width: "100%" }}>
+        <div className={styles.wrapper}>
+            <div className={styles.tableHeader}>
+                <button onClick={onAdd} className={styles.addBtn}>
+                    <span className={styles.icon}>+</span> Add Expense
+                </button>
+            </div>
+
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -41,6 +45,7 @@ function ExpensesTable({
                         <th>Currency</th>
                         <th>Payment method</th>
                         <th>Category</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,12 +57,27 @@ function ExpensesTable({
                             <td>{exp.moneda}</td>
                             <td>{exp.forma_pago}</td>
                             <td>{exp.categories ? exp.categories.nombre : "—"}</td>
+                            <td>
+                                <button
+                                    onClick={() => onEdit && onEdit(exp)}
+                                    className={`${styles.actionBtn} ${styles.edit}`}
+                                >
+                                    ✏️ Edit
+                                </button>
+                                <button
+                                    onClick={() => setSelectedId(exp.id)}
+                                    disabled={deleting}
+                                    className={`${styles.actionBtn} ${styles.delete}`}
+                                >
+                                    🗑️ Delete
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* Pagination controls */}
+            {/* Paginación */}
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -68,6 +88,26 @@ function ExpensesTable({
                 prevPage={prevPage}
                 totalCount={totalCount}
             />
+
+            {/* Modal de confirmación */}
+            <Modal
+                title="Delete Expense"
+                isOpen={!!selectedId}
+                onClose={() => setSelectedId(null)}
+                primaryLabel={deleting ? "Deleting..." : "Delete"}
+                primaryDisabled={deleting}
+                onPrimary={async () => {
+                    if (selectedId) {
+                        await handleDelete(selectedId);
+                        setSelectedId(null);
+                    }
+                }}
+                secondaryLabel="Cancel"
+                primaryVariant="danger"
+                secondaryVariant="secondary"
+            >
+                <p>Are you sure you want to delete this expense?</p>
+            </Modal>
         </div>
     );
 }

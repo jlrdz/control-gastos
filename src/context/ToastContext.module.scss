@@ -9,32 +9,44 @@
 }
 
 .toast {
-    min-width: 220px;
-    max-width: 320px;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    color: #fff;
+    min-width: 240px;
+    max-width: 360px;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    color: #f3f4f6;
+    /* Light gray text */
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background: #1f1f1f;
+    /* Dark background, same style as modal */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    /* Subtle glassmorphism effect */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* Entry and exit animations */
     animation: fadeIn 0.25s ease-out, fadeOut 0.3s ease-in forwards;
+    animation-delay: 0s, 4.7s;
+    /* Adjusted for ~5s duration */
 }
 
+/* Variants: left border color indicates type */
 .toastSuccess {
-    background: linear-gradient(135deg, #4caf50, #43a047);
+    border-left: 6px solid #4caf50;
 }
 
 .toastError {
-    background: linear-gradient(135deg, #f44336, #e53935);
+    border-left: 6px solid #f44336;
 }
 
 .toastInfo {
-    background: linear-gradient(135deg, #2196f3, #1e88e5);
+    border-left: 6px solid #2196f3;
 }
 
 .toastWarning {
-    background: linear-gradient(135deg, #ff9800, #fb8c00);
+    border-left: 6px solid #ff9800;
 }
 
+/* Keyframes */
 @keyframes fadeIn {
     from {
         opacity: 0;

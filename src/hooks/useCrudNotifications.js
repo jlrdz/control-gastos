@@ -1,4 +1,4 @@
-import { useToast } from "../hooks/useToast";
+import { useToast } from "./useToast";
 
 /**
  * Custom hook to centralize CRUD notifications.

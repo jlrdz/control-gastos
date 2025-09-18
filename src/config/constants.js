@@ -16,7 +16,7 @@ export const constants = {
   paymentMethods: [
     { id: "AMEX", nombre: "AMEX" },
     { id: "VISA", nombre: "VISA" },
-    { id: "cash", nombre: "Cash" },
-    { id: "transfer", nombre: "Transfer" }
+    { id: "CASH", nombre: "Cash" },
+    { id: "TRANSFER", nombre: "Transfer" }
   ]
 };

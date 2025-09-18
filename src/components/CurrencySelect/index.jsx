@@ -1,6 +1,6 @@
 import { constants } from "../../config/constants";
 
-function CurrencySelect({ value, onChange, showAll = true, className }) {
+function CurrencySelect({ value, onChange, showAll = true, className, placeholder }) {
     const currencies = [...constants.currencies].sort((a, b) =>
         a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" })
     );
@@ -13,7 +13,13 @@ function CurrencySelect({ value, onChange, showAll = true, className }) {
             required
             className={className}
         >
+            {/* Optional placeholder */}
+            {placeholder && <option value="">{placeholder}</option>}
+
+            {/* "All" option */}
             {showAll && <option value="all">All</option>}
+
+            {/* Currency options */}
             {currencies.map((c) => (
                 <option key={c.id} value={c.id}>
                     {c.nombre}

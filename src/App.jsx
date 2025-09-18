@@ -1,20 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSupabaseFetch } from "./hooks/database/useSupabaseFetch";
 import { usePagination } from "./hooks/usePagination";
 import Filters from "./components/Filters";
 import ExpensesTable from "./components/ExpensesTable";
-import ExpensesSummary from "./components/ExpensesSummary";
 import Modal from "./components/Modal";
 import ExpenseForm from "./components/ExpenseForm";
+import Card from "./components/Card";
 
 function App() {
-  // Custom hook to fetch data from Supabase
   const { loading, data: expenses, error, totalCount, fetchData } = useSupabaseFetch();
-
-  // Local state to manage applied filters
   const [filters, setFilters] = useState([]);
 
-  // Custom hook to manage pagination (current page, page size, total pages)
   const {
     pageSize,
     setPageSize,
@@ -25,50 +21,102 @@ function App() {
     goToPage,
   } = usePagination(totalCount);
 
-  // Calculate range for Supabase query based on current page and page size
+  // State for Add Expense modal
+  const [insertingExpense, setInsertingExpense] = useState(false);
+
+  // State for Edit Expense modal
+  const [editingExpense, setEditingExpense] = useState(null);
+
+  // Ref for form methods
+  const expenseFormRef = useRef(null);
+  const editFormRef = useRef(null);
+
   const from = (currentPage - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // Fetch expenses whenever filters, page, or page size change
-  useEffect(() => {
+  const reloadExpenses = () => {
     fetchData(
       "expenses",
-      "id, fecha, descripcion, monto, moneda, forma_pago, categories(nombre)",
+      "id, fecha, descripcion, monto, moneda, forma_pago, categoria_id, categories(nombre)",
       { orderBy: { column: "fecha", ascending: true } },
       filters,
-      { from, to } //pagination range
+      { from, to }
     );
-  }, [filters, fetchData, currentPage, pageSize]);
+  };
+
+  useEffect(() => {
+    reloadExpenses();
+  }, [filters, currentPage, pageSize]);
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Expenses</h1>
 
-      {/* Filters section (applies filters to the query) */}
-      <Filters onApply={setFilters} />
+      {/* Filters section */}
+      <Card>
+        <Filters onApply={setFilters} expenses={expenses || []} />
+      </Card>
 
-      {/* Summary of expenses (totals, counts, etc.) */}
-      <ExpensesSummary expenses={expenses || []} />
-
-      {/* Modal wrapper for adding a new expense */}
-       <Modal title="Add Expense" triggerText="+ Add Expense">
-        <ExpenseForm onSuccess={fetchData} closeModal={() => {}} />
+      {/* Add Expense Modal */}
+      <Modal
+        title="Add Expense"
+        isOpen={insertingExpense}
+        onClose={() => setInsertingExpense(false)}
+        primaryLabel={expenseFormRef.current?.loading ? "Saving..." : "Save"}
+        primaryDisabled={expenseFormRef.current?.loading}
+        onPrimary={() => expenseFormRef.current?.submit()}
+        secondaryLabel="Cancel"
+        primaryVariant="primary"
+        secondaryVariant="secondary"
+      >
+        <ExpenseForm
+          ref={expenseFormRef}
+          onSuccess={reloadExpenses}
+          closeModal={() => setInsertingExpense(false)}
+        />
       </Modal>
 
-      {/* Expenses table with pagination controls */}
-      <ExpensesTable
-        expenses={expenses || []}
-        loading={loading}
-        error={error}
-        totalCount={totalCount}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        goToPage={goToPage}
-        nextPage={nextPage}
-        prevPage={prevPage}
-      />
+      {/* Edit Expense Modal */}
+      <Modal
+        title="Edit Expense"
+        isOpen={!!editingExpense}
+        onClose={() => setEditingExpense(null)}
+        primaryLabel={editFormRef.current?.loading ? "Updating..." : "Update"}
+        primaryDisabled={editFormRef.current?.loading}
+        onPrimary={() => editFormRef.current?.submit()}
+        secondaryLabel="Cancel"
+        primaryVariant="primary"
+        secondaryVariant="secondary"
+      >
+        {editingExpense && (
+          <ExpenseForm
+            ref={editFormRef}
+            onSuccess={reloadExpenses}
+            closeModal={() => setEditingExpense(null)}
+            {...editingExpense}
+          />
+        )}
+      </Modal>
+
+      {/* Expenses table */}
+      <Card>
+        <ExpensesTable
+          expenses={expenses || []}
+          loading={loading}
+          error={error}
+          totalCount={totalCount}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          goToPage={goToPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          onDeleteSuccess={reloadExpenses}
+          onEdit={(expense) => setEditingExpense(expense)}
+          onAdd={() => setInsertingExpense(true)}
+        />
+      </Card>
     </div>
   );
 }

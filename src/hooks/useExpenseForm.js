@@ -1,7 +1,8 @@
 import { useForm } from "./useForm";
-import { useState, useMemo } from "react";
-import { supabase } from "../database/supabaseClient";
-import { useCrudNotifications } from "../utils/notifications";
+import { useMemo, useState } from "react";
+import { useCrudNotifications } from "./useCrudNotifications";
+import { useSupabaseInsert } from "./database/useSupabaseInsert";
+import { useSupabaseUpdate } from "./database/useSupabaseUpdate";
 
 /**
  * Hook for handling expense form logic (state, submit, reset, notifications).
@@ -12,23 +13,30 @@ export const useExpenseForm = (
 ) => {
   const { state, changeValue, handleReset } = useForm({
     values: {
-      fecha: "",
-      descripcion: "",
-      monto: "",
-      moneda: "",
-      forma_pago: "",
-      categoria_id: "",
-      ...initialValues, // override defaults if editing
+      id: null,
+      date: "",
+      description: "",
+      amount: "",
+      currency: "",
+      paymentMethod: "",
+      category: "",
+      ...initialValues,
     },
   });
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { notifySuccess, notifyError } = useCrudNotifications();
 
-  // Ensure safe access to values
+  const { insertData, loading: insertLoading } = useSupabaseInsert();
+  const { updateData, loading: updateLoading } = useSupabaseUpdate();
+
+  // Merge both loading states
+  const loading = insertLoading || updateLoading;
+
+  // Safe values to avoid undefined
   const safeValues = useMemo(
     () => ({
+      id: state.values?.id ?? null,
       fecha: state.values?.fecha ?? "",
       descripcion: state.values?.descripcion ?? "",
       monto: state.values?.monto ?? "",
@@ -40,49 +48,59 @@ export const useExpenseForm = (
   );
 
   /**
-   * Handle form submission (insert expense into Supabase).
+   * Handle form submission (insert or update via Supabase).
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     try {
-      const { error } = await supabase.from("expenses").insert([
-        {
+      let resp;
+
+      if (safeValues.id) {
+        // Update
+        resp = await updateData("expenses", safeValues.id, {
           fecha: safeValues.fecha,
           descripcion: safeValues.descripcion,
           monto: parseFloat(safeValues.monto),
           moneda: safeValues.moneda,
           forma_pago: safeValues.forma_pago,
           categoria_id: safeValues.categoria_id || null,
-        },
-      ]);
+        });
+      } else {
+        // Insert
+        resp = await insertData("expenses", {
+          fecha: safeValues.fecha,
+          descripcion: safeValues.descripcion,
+          monto: parseFloat(safeValues.monto),
+          moneda: safeValues.moneda,
+          forma_pago: safeValues.forma_pago,
+          categoria_id: safeValues.categoria_id || null,
+        });
+      }
 
-      if (error) throw error;
+      if (resp.error) throw resp.error;
 
       if (onSuccess) onSuccess(); // refresh parent table
-      handleReset(); // reset form
+      handleReset();
 
-      notifySuccess("create", "Expense"); // ✅ toast success with entity
+      notifySuccess(safeValues.id ? "update" : "create", "Expense");
 
       if (closeModal) {
-        setTimeout(() => closeModal(), 1000); // auto-close modal after 1s
+        setTimeout(() => closeModal(), 1000);
       }
     } catch (err) {
       setError(err.message);
-      notifyError("create", "Expense"); // ❌ toast error with entity
-    } finally {
-      setLoading(false);
+      notifyError(safeValues.id ? "update" : "create", "Expense");
     }
   };
 
   return {
-    state: safeValues,   // safe form values
-    changeValue,         // update a field
-    reset: handleReset,  // reset form
-    handleSubmit,        // submit logic
-    loading,             // loading state
-    error,               // error message
+    state: safeValues,
+    changeValue,
+    reset: handleReset,
+    handleSubmit,
+    loading,
+    error,
   };
 };

@@ -1,36 +1,39 @@
 @use "../../styles/variables" as v;
 @use "../../styles/mixins" as m;
 
-/* ===== Base dialog styles with subtle glow ===== */
+/* ===== Base dialog styles with soft UI (neumorphism) ===== */
 .dialog {
     padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    background: linear-gradient(180deg, v.$color-bg-dark 0%, v.$color-bg-darker 100%);
-    box-shadow: v.$shadow-main, v.$shadow-glow;
+    border-radius: 20px;
+    background: v.$color-bg-dark; // solid dark base
     width: 400px;
     max-width: 90%;
     z-index: 1000;
     overscroll-behavior: contain;
     overflow-x: hidden;
-    /* prevent scroll chaining inside modal */
+
+    // neumorphism shadows
+    box-shadow:
+        8px 8px 16px rgba(0, 0, 0, 0.65),
+        -8px -8px 16px rgba(255, 255, 255, 0.05);
+
+    border: none;
+    outline: none;
 }
 
 /* ===== Backdrop styles ===== */
 :global(dialog)::backdrop {
     pointer-events: none;
-    /* backdrop does not block clicks */
-    background-color: rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-    /* blur effect for modern browsers */
+    background-color: rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 /* ===== Header ===== */
 .header {
     margin-bottom: 1rem;
     font-size: 1.25rem;
-    font-weight: bold;
+    font-weight: 600;
     color: v.$color-text-strong;
 }
 
@@ -42,15 +45,87 @@
 
 /* ===== Footer ===== */
 .footer {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
 }
 
-/* ===== Close button ===== */
-.closeBtn {
-    @include m.button-base(v.$color-danger, v.$color-danger-hover);
+/* ===== Generic button base ===== */
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: v.$color-bg-dark;
+    color: #f3f4f6;
+    box-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.6),
+        -4px -4px 8px rgba(255, 255, 255, 0.05);
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        box-shadow:
+            inset 4px 4px 8px rgba(0, 0, 0, 0.6),
+            inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+        transform: translateY(1px);
+    }
 }
 
-/* ===== Trigger button ===== */
-.triggerBtn {
-    @include m.button-base(v.$color-primary, v.$color-primary-hover);
+/* Variants */
+.primaryBtn {
+    @extend .btn;
+    background: v.$color-primary-gradient;
+    color: #fff;
+}
+
+
+.secondaryBtn {
+    @extend .btn;
+    background: #555; // neutro gris
+    color: v.$color-text-strong;
+}
+
+.dangerBtn {
+    @extend .btn;
+    background: v.$color-danger-gradient;
+    color: #fff;
+}
+
+.dangerBtn:hover {
+    box-shadow:
+      0 0 8px rgba(211, 47, 47, 0.6);
+  }
+  
+  .dangerBtn:active {
+    box-shadow:
+      inset 4px 4px 8px rgba(0, 0, 0, 0.6),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+  }
+  
+
+
+.spinnerWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

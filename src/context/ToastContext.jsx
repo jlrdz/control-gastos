@@ -6,11 +6,12 @@ export const ToastContext = createContext();
 export const ToastProvider = ({ children }) => {
     const [toasts, setToasts] = useState([]);
 
-    const addToast = useCallback((message, type = "success", duration = 3000) => {
+    // Default duration: 5s
+    const addToast = useCallback((message, type = "success", duration = 5000) => {
         const id = Date.now();
         setToasts((prev) => [...prev, { id, message, type }]);
 
-        // Auto-remove
+        // Auto-remove after duration
         setTimeout(() => {
             setToasts((prev) => prev.filter((toast) => toast.id !== id));
         }, duration);

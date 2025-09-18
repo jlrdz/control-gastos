@@ -1,3 +1,4 @@
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useExpenseForm } from "../../hooks/useExpenseForm";
 import CategorySelect from "../CategorySelect";
 import CurrencySelect from "../CurrencySelect";
@@ -6,20 +7,37 @@ import styles from "./index.module.scss";
 
 /**
  * ExpenseForm component
- * UI only — logic is handled by useExpenseForm.
+ * Reusable for both "create" and "edit" modes.
+ * If it receives an `id` in initialValues, it will update instead of insert.
  */
-export default function ExpenseForm({ onSuccess, closeModal }) {
-    const { state, changeValue, handleSubmit, loading, error } =
-        useExpenseForm({}, { onSuccess, closeModal });
+const ExpenseForm = forwardRef(function ExpenseForm(
+    { onSuccess, closeModal, ...initialValues },
+    ref
+) {
+    const { state, changeValue, handleSubmit, loading, error } = useExpenseForm(
+        initialValues, //pass initial values (empty for create, filled for edit)
+        { onSuccess, closeModal }
+    );
+
+    const formRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        submit: () => {
+            if (formRef.current) {
+                formRef.current.requestSubmit();
+            }
+        },
+        loading, // expose loading state
+    }));
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
             {/* Date */}
             <div>
                 <label className={styles.label}>Date:</label>
                 <input
                     type="date"
-                    name="fecha"
+                    name="date"
                     value={state.fecha}
                     onChange={changeValue}
                     required
@@ -32,7 +50,7 @@ export default function ExpenseForm({ onSuccess, closeModal }) {
                 <label className={styles.label}>Description:</label>
                 <input
                     type="text"
-                    name="descripcion"
+                    name="description"
                     value={state.descripcion}
                     onChange={changeValue}
                     required
@@ -45,7 +63,7 @@ export default function ExpenseForm({ onSuccess, closeModal }) {
                 <label className={styles.label}>Amount:</label>
                 <input
                     type="number"
-                    name="monto"
+                    name="amount"
                     value={state.monto}
                     onChange={changeValue}
                     step="0.01"
@@ -61,6 +79,7 @@ export default function ExpenseForm({ onSuccess, closeModal }) {
                     value={state.moneda}
                     onChange={changeValue}
                     showAll={false}
+                    placeholder="-- Select --"
                     className={styles.select}
                 />
             </div>
@@ -72,6 +91,7 @@ export default function ExpenseForm({ onSuccess, closeModal }) {
                     value={state.forma_pago}
                     onChange={changeValue}
                     showAll={false}
+                    placeholder="-- Select --"
                     className={styles.select}
                 />
             </div>
@@ -83,21 +103,15 @@ export default function ExpenseForm({ onSuccess, closeModal }) {
                     value={state.categoria_id}
                     onChange={changeValue}
                     showAll={false}
+                    placeholder="-- Select --"
                     className={styles.select}
                 />
             </div>
 
             {/* Error feedback */}
             {error && <p className={styles.error}>{error}</p>}
-
-            {/* Submit */}
-            <button
-                type="submit"
-                disabled={loading}
-                className={styles.submitBtn}
-            >
-                {loading ? "Saving..." : "Save Expense"}
-            </button>
         </form>
     );
-}
+});
+
+export default ExpenseForm;

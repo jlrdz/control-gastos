@@ -1,0 +1,114 @@
+@use "../../styles/variables" as v;
+
+.wrapper {
+    width: 100%;
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.addBtn {
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: v.$color-primary-gradient;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.6),
+        -4px -4px 8px rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 8px rgba(25, 118, 210, 0.6);
+    }
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow:
+            inset 3px 3px 6px rgba(0, 0, 0, 0.6),
+            inset -3px -3px 6px rgba(255, 255, 255, 0.05);
+    }
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+
+    thead {
+        background: #2a2a2a;
+    }
+
+    th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: v.$color-text-strong;
+    }
+
+    td {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        color: v.$color-text;
+        background: #333;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    tr:nth-child(even) td {
+        background: #2d2d2d;
+    }
+
+    tbody tr:hover td {
+        background: #3a3a3a;
+        transition: background 0.2s ease;
+    }
+}
+
+.actionBtn {
+    border: none;
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.5),
+        -2px -2px 4px rgba(255, 255, 255, 0.05);
+
+    &.edit {
+        background: v.$color-primary-gradient;
+        color: #fff;
+
+        &:hover {
+            box-shadow: 0 0 6px rgba(25, 118, 210, 0.6);
+        }
+    }
+
+    &.delete {
+        background: v.$color-danger-gradient;
+        color: #fff;
+
+        &:hover {
+            box-shadow: 0 0 6px rgba(211, 47, 47, 0.6);
+        }
+    }
+}
+
+.icon {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+}

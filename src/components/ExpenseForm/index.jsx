@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useExpenseForm } from "../../hooks/useExpenseForm";
 import CategorySelect from "../CategorySelect";
 import CurrencySelect from "../CurrencySelect";
@@ -11,15 +11,23 @@ import styles from "./index.module.scss";
  * If it receives an `id` in initialValues, it will update instead of insert.
  */
 const ExpenseForm = forwardRef(function ExpenseForm(
-    { onSuccess, closeModal, ...initialValues },
+    { onSuccess, closeModal, onLoadingChange, ...initialValues },
     ref
 ) {
     const { state, changeValue, handleSubmit, loading, error } = useExpenseForm(
-        initialValues, //pass initial values (empty for create, filled for edit)
+        initialValues,
         { onSuccess, closeModal }
     );
 
     const formRef = useRef(null);
+
+    // ✅ Solo se ejecuta cuando cambia `loading`
+    useEffect(() => {
+        if (typeof onLoadingChange === "function") {
+            onLoadingChange(loading);
+        }
+        // no dependemos de `onLoadingChange` para evitar loops infinitos
+    }, [loading]);
 
     useImperativeHandle(ref, () => ({
         submit: () => {
@@ -37,7 +45,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
                 <label className={styles.label}>Date:</label>
                 <input
                     type="date"
-                    name="date"
+                    name="fecha"
                     value={state.fecha}
                     onChange={changeValue}
                     required
@@ -50,7 +58,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
                 <label className={styles.label}>Description:</label>
                 <input
                     type="text"
-                    name="description"
+                    name="descripcion"
                     value={state.descripcion}
                     onChange={changeValue}
                     required
@@ -63,7 +71,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
                 <label className={styles.label}>Amount:</label>
                 <input
                     type="number"
-                    name="amount"
+                    name="monto"
                     value={state.monto}
                     onChange={changeValue}
                     step="0.01"

@@ -18,9 +18,9 @@ export default function Modal({
     primaryLabel = null,
     onPrimary = null,
     primaryDisabled = false,
-    primaryVariant = "primary",   // 👈 NEW
+    primaryVariant = "primary",  
     secondaryLabel = "Close",
-    secondaryVariant = "secondary", // 👈 NEW
+    secondaryVariant = "secondary",
 }) {
     const { ref } = useModal();
 

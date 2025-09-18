@@ -1,41 +1,52 @@
-import { useState } from "react";
-import { APP_CONFIG } from "../config/appConfig";
+import { useState, useMemo } from "react";
 
-/**
- * Hook to handle pagination logic across the app.
- * Keeps track of current page, page size, and total pages.
- */
-export function usePagination(totalCount = 0) {
-    const [pageSize, setPageSize] = useState(APP_CONFIG.pagination.defaultPageSize);
+export function usePagination(totalCount, initialPageSize = 10, maxVisible = 5) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(initialPageSize);
 
-    // Total pages based on count and page size
     const totalPages = Math.ceil(totalCount / pageSize);
 
-    // Navigate to next page
-    const nextPage = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    };
+    const startRecord = (currentPage - 1) * pageSize + 1;
+    const endRecord = Math.min(currentPage * pageSize, totalCount);
 
-    // Navigate to previous page
-    const prevPage = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
-    };
+    const pageNumbers = useMemo(() => {
+        const pages = [];
+        const half = Math.floor(maxVisible / 2);
 
-    // Jump to specific page
-    const goToPage = (page) => {
-        const safePage = Math.max(1, Math.min(page, totalPages));
-        setCurrentPage(safePage);
-    };
+        if (totalPages <= maxVisible) {
+            for (let i = 1; i <= totalPages; i++) pages.push(i);
+        } else {
+            if (currentPage <= half + 1) {
+                for (let i = 1; i <= maxVisible; i++) pages.push(i);
+                pages.push("…", totalPages);
+            } else if (currentPage >= totalPages - half) {
+                pages.push(1, "…");
+                for (let i = totalPages - (maxVisible - 1); i <= totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                pages.push(1, "…");
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pages.push(i);
+                }
+                pages.push("…", totalPages);
+            }
+        }
+
+        return pages;
+    }, [currentPage, totalPages, maxVisible]);
 
     return {
-        pageSize,
-        setPageSize,
         currentPage,
         setCurrentPage,
+        pageSize,
+        setPageSize,
         totalPages,
-        nextPage,
-        prevPage,
-        goToPage,
+        startRecord,
+        endRecord,
+        pageNumbers,
+        nextPage: () => setCurrentPage((p) => Math.min(p + 1, totalPages)),
+        prevPage: () => setCurrentPage((p) => Math.max(p - 1, 1)),
+        goToPage: (page) => setCurrentPage(page),
     };
 }

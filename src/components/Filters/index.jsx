@@ -2,14 +2,13 @@ import CategorySelect from "../CategorySelect";
 import CurrencySelect from "../CurrencySelect";
 import PaymentMethodSelect from "../PaymentMethodSelect";
 import { useFilters } from "../../hooks/useFilters";
-import { formatNumber } from "../../utils/format";
 import styles from "./index.module.scss";
 
-function Filters({ onApply, expenses = [] }) {
+function Filters({ onApply }) {
     const { state, changeValue, reset } = useFilters(
         {
             fecha_inicio: "",
-            fecha_fin: "",
+            fecha_final: "",
             categoria_id: "",
             forma_pago: "",
             moneda: "",
@@ -18,22 +17,15 @@ function Filters({ onApply, expenses = [] }) {
         onApply
     );
 
-    // ---- Summary (inline) ----
-    const totalCount = expenses?.length ?? 0;
-    const totals = (expenses || []).reduce((acc, exp) => {
-        const { moneda, monto } = exp;
-        acc[moneda] = (acc[moneda] || 0) + monto;
-        return acc;
-    }, {});
-
     return (
         <form onReset={reset} className={styles.filters}>
             {/* From */}
             <div className={styles.field}>
-                <label htmlFor="startDate">From:</label>
+                <label htmlFor="fecha_inicio">From:</label>
                 <input
                     type="date"
                     id="fecha_inicio"
+                    name="fecha_inicio"
                     value={state.fecha_inicio}
                     onChange={changeValue}
                 />
@@ -41,19 +33,21 @@ function Filters({ onApply, expenses = [] }) {
 
             {/* To */}
             <div className={styles.field}>
-                <label htmlFor="endDate">To:</label>
+                <label htmlFor="fecha_final">To:</label>
                 <input
                     type="date"
-                    id="fecha_fin"
-                    value={state.fecha_fin}
+                    id="fecha_final"
+                    name="fecha_final"
+                    value={state.fecha_final}
                     onChange={changeValue}
                 />
             </div>
 
             {/* Category */}
             <div className={styles.field}>
-                <label htmlFor="category">Category:</label>
+                <label htmlFor="categoria_id">Category:</label>
                 <CategorySelect
+                    id="categoria_id"
                     value={state.categoria_id}
                     onChange={changeValue}
                     className={styles.select}
@@ -62,8 +56,9 @@ function Filters({ onApply, expenses = [] }) {
 
             {/* Payment Method */}
             <div className={styles.field}>
-                <label htmlFor="paymentMethod">Payment method:</label>
+                <label htmlFor="forma_pago">Payment method:</label>
                 <PaymentMethodSelect
+                    id="forma_pago"
                     value={state.forma_pago}
                     onChange={changeValue}
                     className={styles.select}
@@ -72,8 +67,9 @@ function Filters({ onApply, expenses = [] }) {
 
             {/* Currency */}
             <div className={styles.field}>
-                <label htmlFor="currency">Currency:</label>
+                <label htmlFor="moneda">Currency:</label>
                 <CurrencySelect
+                    id="moneda"
                     value={state.moneda}
                     onChange={changeValue}
                     className={styles.select}
@@ -82,31 +78,20 @@ function Filters({ onApply, expenses = [] }) {
 
             {/* Search */}
             <div className={styles.field}>
-                <label htmlFor="search">Search:</label>
+                <label htmlFor="texto_busqueda">Search:</label>
                 <input
                     type="text"
                     id="texto_busqueda"
+                    name="texto_busqueda"
                     placeholder="Description or reference..."
                     value={state.texto_busqueda}
                     onChange={changeValue}
                 />
             </div>
 
-            {/* Actions + Summary inline */}
+            {/* Actions */}
             <div className={styles.actions}>
                 <button type="reset">Clear filters</button>
-
-                {totalCount > 0 && (
-                    <div className={styles.summaryInline}>
-                        <span>Records: <strong>{totalCount}</strong></span>
-                        {totals.CRC != null && (
-                            <span>Total CRC: <strong>{formatNumber(totals.CRC)}</strong></span>
-                        )}
-                        {totals.USD != null && (
-                            <span>Total USD: <strong>{formatNumber(totals.USD)}</strong></span>
-                        )}
-                    </div>
-                )}
             </div>
         </form>
     );

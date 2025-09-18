@@ -1,0 +1,20 @@
+.summary {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #ddd;
+
+    span strong {
+        font-weight: 600;
+        color: #fff;
+    }
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    /* 👈 summary left, button right */
+    align-items: center;
+    margin-bottom: 1rem;
+}

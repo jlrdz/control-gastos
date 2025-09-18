@@ -14,12 +14,12 @@ export const useExpenseForm = (
   const { state, changeValue, handleReset } = useForm({
     values: {
       id: null,
-      date: "",
-      description: "",
-      amount: "",
-      currency: "",
-      paymentMethod: "",
-      category: "",
+      fecha: "",
+      descripcion: "",
+      monto: "",
+      moneda: "",
+      forma_pago: "",
+      categoria_id: "",
       ...initialValues,
     },
   });

@@ -1,90 +1,59 @@
-import { APP_CONFIG } from "../../config/appConfig";
 import styles from "./index.module.scss";
+import { APP_CONFIG } from "../../config/appConfig";
 
-/**
- * Pagination component with:
- * - Previous/Next buttons
- * - Page number buttons (with ellipsis if too many)
- * - Page size selector
- * - Info about the range of records being displayed
- */
 export default function Pagination({
     currentPage,
-    totalPages,
     pageSize,
     setPageSize,
     goToPage,
     nextPage,
     prevPage,
+    totalPages,
     totalCount,
+    startRecord,
+    endRecord,
+    pageNumbers = [],
 }) {
-    // Helper to build an array of visible page numbers with ellipsis
-    const getPageNumbers = () => {
-        const pages = [];
-        const maxVisible = 5;
-        const half = Math.floor(maxVisible / 2);
-
-        if (totalPages <= maxVisible) {
-            for (let i = 1; i <= totalPages; i++) pages.push(i);
-        } else {
-            if (currentPage <= half + 1) {
-                for (let i = 1; i <= maxVisible; i++) pages.push(i);
-                pages.push("...", totalPages);
-            } else if (currentPage >= totalPages - half) {
-                pages.push(1, "…");
-                for (let i = totalPages - (maxVisible - 1); i <= totalPages; i++) {
-                    pages.push(i);
-                }
-            } else {
-                pages.push(1, "…");
-                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-                    pages.push(i);
-                }
-                pages.push("…", totalPages);
-            }
-        }
-
-        return pages;
-    };
-
-    // Calculate start and end records
-    const startRecord = (currentPage - 1) * pageSize + 1;
-    const endRecord = Math.min(currentPage * pageSize, totalCount);
+    const hasRecords = totalCount > 0;
 
     return (
         <div className={styles.pagination}>
             {/* Prev button */}
             <button
-                disabled={currentPage === 1}
+                disabled={!hasRecords || currentPage === 1}
                 onClick={prevPage}
                 className={styles.pageBtn}
+                aria-label="Previous page"
             >
                 Prev
             </button>
 
             {/* Page number buttons */}
-            {getPageNumbers().map((page, index) =>
-                page === "…" ? (
-                    <span key={index} className={styles.ellipsis}>
-                        …
-                    </span>
-                ) : (
-                    <button
-                        key={`page-${page}-${index}`}
-                        onClick={() => goToPage(page)}
-                        className={`${styles.pageBtn} ${page === currentPage ? styles.active : ""
-                            }`}
-                    >
-                        {page}
-                    </button>
-                )
-            )}
+            {hasRecords &&
+                pageNumbers.map((page, index) =>
+                    page === "…" ? (
+                        <span key={`ellipsis-${index}`} className={styles.ellipsis}>
+                            …
+                        </span>
+                    ) : (
+                        <button
+                            key={`page-${page}-${index}`}
+                            onClick={() => goToPage(page)}
+                            className={`${styles.pageBtn} ${page === currentPage ? styles.active : ""
+                                }`}
+                            aria-label={`Go to page ${page}`}
+                        >
+                            {page}
+                        </button>
+                    )
+                )}
 
             {/* Next button */}
             <button
-                disabled={currentPage === totalPages}
+                disabled={!hasRecords || currentPage === totalPages}
                 onClick={nextPage}
                 className={styles.pageBtn}
+                aria-label="Next page"
             >
                 Next
             </button>
@@ -97,6 +66,8 @@ export default function Pagination({
                     goToPage(1);
                 }}
                 className={styles.pageSize}
+                aria-label="Select page size"
+                disabled={!hasRecords}
             >
                 {APP_CONFIG.pagination.pageSizeOptions.map((size) => (
                     <option key={size} value={size}>
@@ -107,7 +78,14 @@ export default function Pagination({
 
             {/* Records info */}
             <span className={styles.info}>
-                Showing {startRecord}-{endRecord} of {totalCount} records
+                {hasRecords ? (
+                    <>
+                        Showing <strong>{startRecord}</strong>-<strong>{endRecord}</strong> of{" "}
+                        <strong>{totalCount}</strong> {totalCount === 1 ? "record" : "records"}
+                    </>
+                ) : (
+                    "No records found"
+                )}
             </span>
         </div>
     );

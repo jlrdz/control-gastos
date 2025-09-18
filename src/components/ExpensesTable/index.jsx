@@ -8,7 +8,7 @@ import { useExpensesTable } from "../../hooks/useExpensesTable";
 
 function ExpensesTable({ filters }) {
     const {
-        expenses, error, loading,
+        expenses, error, loading, totalCount,
         modal, setModal,
         expenseFormRef, editFormRef,
         deleting, handleDelete,
@@ -89,7 +89,7 @@ function ExpensesTable({ filters }) {
                     goToPage={goToPage}
                     nextPage={nextPage}
                     prevPage={prevPage}
-                    totalCount={expenses.length}
+                    totalCount={totalCount}
                     startRecord={startRecord}
                     endRecord={endRecord}
                     pageNumbers={pageNumbers}

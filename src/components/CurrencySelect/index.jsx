@@ -17,7 +17,7 @@ function CurrencySelect({ value, onChange, showAll = true, className, placeholde
             {placeholder && <option value="">{placeholder}</option>}
 
             {/* "All" option */}
-            {showAll && <option value="all">All</option>}
+            {showAll && <option value="">All</option>}
 
             {/* Currency options */}
             {currencies.map((c) => (

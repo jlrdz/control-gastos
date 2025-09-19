@@ -5,6 +5,8 @@
   border-radius: 20px;
   background: v.$color-bg-dark; // mismo fondo que usas en modal
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
 
   // que siempre ocupe todo el ancho disponible
   width: 100%;

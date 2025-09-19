@@ -17,7 +17,7 @@ function PaymentMethodSelect({ value, onChange, showAll = true, className, place
             {placeholder && <option value="">{placeholder}</option>}
 
             {/* "All" option */}
-            {showAll && <option value="all">All</option>}
+            {showAll && <option value="">All</option>}
 
             {/* Payment method options */}
             {paymentMethods.map((pm) => (

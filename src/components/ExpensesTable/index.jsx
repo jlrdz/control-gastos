@@ -1,10 +1,11 @@
-import { formatNumber, formatDate } from "../../utils/format";
+import React from "react";
 import Pagination from "../Pagination";
 import Modal from "../Modal";
 import ExpenseForm from "../ExpenseForm";
 import styles from "./index.module.scss";
-import TableSummary from "../TableSummary";
+import TableSummary from "../ExpensesSummary";
 import { useExpensesTable } from "../../hooks/useExpensesTable";
+import ExpensesRows from "../ExpensesRows";
 
 function ExpensesTable({ filters }) {
     const {
@@ -20,11 +21,9 @@ function ExpensesTable({ filters }) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.tableHeader}>
-                {!loading && expenses?.length > 0 && (
-                    <div className={styles.summaryWrapper}>
-                        <TableSummary expenses={expenses} />
-                    </div>
-                )}
+                <div className={styles.summaryWrapper}>
+                    <TableSummary expenses={expenses} />
+                </div>
                 <button
                     onClick={() => setModal((m) => ({ ...m, insert: true }))}
                     className={styles.addBtn}
@@ -32,69 +31,61 @@ function ExpensesTable({ filters }) {
                     <span className={styles.icon}>+</span> Add Expense
                 </button>
             </div>
+            <div className={styles.tableWrapper}>
 
-            {loading && <p>Loading expenses...</p>}
-            {error && <p>Error: {error.message}</p>}
-            {!loading && (!expenses || expenses.length === 0) && <p>No expenses found</p>}
-
-            {!loading && expenses?.length > 0 && (
                 <table className={styles.table}>
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Description</th>
-                            <th>Amount</th>
-                            <th>Currency</th>
+                            <th className={styles.amountCol}>Amount</th>
                             <th>Payment method</th>
                             <th>Category</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {expenses.map((exp) => (
-                            <tr key={exp.id}>
-                                <td>{formatDate(exp.fecha, "es-cr")}</td>
-                                <td>{exp.descripcion}</td>
-                                <td className={styles.amount}>{formatNumber(exp.monto)}</td>
-                                <td>{exp.moneda}</td>
-                                <td>{exp.forma_pago}</td>
-                                <td>{exp.categories?.nombre ?? "—"}</td>
-                                <td>
-                                    <button
-                                        onClick={() => setModal((m) => ({ ...m, edit: exp }))}
-                                        className={`${styles.actionBtn} ${styles.edit}`}
-                                    >
-                                        ✏️ Edit
-                                    </button>
-                                    <button
-                                        onClick={() => setModal((m) => ({ ...m, deleteId: exp.id }))}
-                                        disabled={deleting}
-                                        className={`${styles.actionBtn} ${styles.delete}`}
-                                    >
-                                        🗑️ Delete
-                                    </button>
+                        {error ? (
+                            <tr>
+                                <td colSpan={7} className={styles.errorCell}>
+                                    Error: {error.message}
                                 </td>
                             </tr>
-                        ))}
+                        ) : expenses?.length > 0 ? (
+                            <ExpensesRows
+                                expenses={expenses}
+                                onEdit={(exp) => setModal((m) => ({ ...m, edit: exp }))}
+                                onDelete={(id) => setModal((m) => ({ ...m, deleteId: id }))}
+                                deleting={deleting}
+                            />
+                        ) : (
+                            <tr>
+                                <td colSpan={7} className={styles.emptyCell}>
+                                    No expenses found
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
-            )}
-
-            {!loading && expenses?.length > 0 && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    pageSize={pageSize}
-                    setPageSize={setPageSize}
-                    goToPage={goToPage}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                    totalCount={totalCount}
-                    startRecord={startRecord}
-                    endRecord={endRecord}
-                    pageNumbers={pageNumbers}
-                />
-            )}
+                {loading && (
+                    <div className={styles.overlay}>
+                        <div className={styles.spinner}></div>
+                    </div>
+                )}
+            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                goToPage={goToPage}
+                nextPage={nextPage}
+                prevPage={prevPage}
+                totalCount={totalCount}
+                startRecord={startRecord}
+                endRecord={endRecord}
+                pageNumbers={pageNumbers}
+            />
 
             {/* Add Modal */}
             <Modal

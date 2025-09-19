@@ -91,40 +91,22 @@
     flex-wrap: wrap;
 
     button {
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 12px;
-        padding: 0.6rem 1.2rem;
+        padding: 0.5rem 1rem;
         font-weight: 500;
         cursor: pointer;
-        background: linear-gradient(145deg, #555, #333);
-        color: #fff;
-        box-shadow:
-            4px 4px 8px rgba(0, 0, 0, 0.6),
-            -4px -4px 8px rgba(255, 255, 255, 0.05);
+        background: transparent;
+        color: #ddd;
         transition: all 0.2s ease;
 
         &:hover {
-            transform: translateY(-1px);
-            // box-shadow: 0 0 6px rgba(211, 47, 47, 0.5); // glow rojo
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
         }
 
         &:active {
-            box-shadow:
-                inset 4px 4px 8px rgba(0, 0, 0, 0.6),
-                inset -4px -4px 8px rgba(255, 255, 255, 0.05);
-            transform: translateY(1px);
+            background: rgba(255, 255, 255, 0.12);
         }
-    }
-}
-
-.summaryInline {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    font-size: 0.85rem;
-    color: v.$color-text;
-
-    span {
-        white-space: nowrap;
     }
 }

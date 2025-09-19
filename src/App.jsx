@@ -11,6 +11,8 @@ function App() {
   return (
     <div className="app-container">
       <h1 className={styles.title}>Personal Expense Tracker</h1>
+      <p className={styles.subtitle}>Manage your expenses and track insights</p>
+
 
       {/* Filters */}
       <Card>

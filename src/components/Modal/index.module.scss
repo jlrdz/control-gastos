@@ -1,18 +1,18 @@
 @use "../../styles/variables" as v;
-@use "../../styles/mixins" as m;
+
 
 /* ===== Base dialog styles with soft UI (neumorphism) ===== */
 .dialog {
     padding: 1.5rem;
     border-radius: 20px;
-    background: v.$color-bg-dark; // solid dark base
-    width: 400px;
-    max-width: 90%;
+    background: v.$color-bg-dark;
+    width: auto;
+    max-width: 400px; // ✅ más compacto todavía
+    min-width: 340px;
     z-index: 1000;
     overscroll-behavior: contain;
     overflow-x: hidden;
 
-    // neumorphism shadows
     box-shadow:
         8px 8px 16px rgba(0, 0, 0, 0.65),
         -8px -8px 16px rgba(255, 255, 255, 0.05);
@@ -20,6 +20,8 @@
     border: none;
     outline: none;
 }
+
+
 
 /* ===== Backdrop styles ===== */
 :global(dialog)::backdrop {
@@ -41,6 +43,16 @@
 .content {
     margin-bottom: 1rem;
     color: v.$color-text;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    input,
+    select,
+    textarea {
+        width: 100%; // ✅ ocupa todo el ancho útil del modal
+        max-width: 100%; // ✅ evita que se desborde
+    }
 }
 
 /* ===== Footer ===== */
@@ -81,13 +93,30 @@
     @extend .btn;
     background: v.$color-primary-gradient;
     color: #fff;
+    min-width: 120px; // ✅ un poquito más grande que Cancel
 }
 
 
 .secondaryBtn {
-    @extend .btn;
-    background: #555; // neutro gris
-    color: v.$color-text-strong;
+    background: transparent;
+    color: #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3); // ✅ mismo estilo que clearBtn
+    }
+
+    &:active {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    &:focus {
+        outline: none; // ✅ quita borde azul feo
+        border-color: rgba(255, 255, 255, 0.3);
+    }
 }
 
 .dangerBtn {
@@ -97,18 +126,16 @@
 }
 
 .dangerBtn:hover {
-    box-shadow:
-      0 0 8px rgba(211, 47, 47, 0.6);
-  }
-  
-  .dangerBtn:active {
-    box-shadow:
-      inset 4px 4px 8px rgba(0, 0, 0, 0.6),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.05);
-  }
-  
+    box-shadow: 0 0 8px rgba(211, 47, 47, 0.6);
+}
 
+.dangerBtn:active {
+    box-shadow:
+        inset 4px 4px 8px rgba(0, 0, 0, 0.6),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+}
 
+/* ===== Spinner ===== */
 .spinnerWrapper {
     display: flex;
     align-items: center;
@@ -128,4 +155,9 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* ===== Select placeholders ===== */
+select:invalid {
+    color: #aaa; // ✅ gris para reforzar "pendiente de selección"
 }

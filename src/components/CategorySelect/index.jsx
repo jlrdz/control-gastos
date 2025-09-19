@@ -10,6 +10,8 @@ function CategorySelect({ value, onChange, showAll = true, className, placeholde
         });
     }, [fetchData]);
 
+    const valueExists = categories?.some((c) => c.id === value);
+
     return (
         <select
             id="categoria_id"
@@ -22,10 +24,15 @@ function CategorySelect({ value, onChange, showAll = true, className, placeholde
             {placeholder && <option value="">{placeholder}</option>}
 
             {/* "All" option */}
-            {showAll && <option value="all">All</option>}
+            {showAll && <option value="">All</option>}
+
+            {/* Opción temporal si hay un valor pero aún no está en la lista */}
+            {value && !valueExists && (
+                <option value={value}>Loading...</option>
+            )}
 
             {/* Loading / Error / Data */}
-            {loading && <option disabled>Loading...</option>}
+            {loading && !categories?.length && <option disabled>Loading...</option>}
             {error && <option disabled>Error loading</option>}
             {categories?.map((cat) => (
                 <option key={cat.id} value={cat.id}>

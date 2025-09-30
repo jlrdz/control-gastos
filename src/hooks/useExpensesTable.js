@@ -19,6 +19,11 @@ export function useExpensesTable(filters) {
     const expenseFormRef = useRef(null);
     const editFormRef = useRef(null);
 
+    const [sortConfig, setSortConfig] = useState({
+        key: "fecha",
+        direction: "desc",
+    });
+
     // Fetch a supabase
     const { loading, data: expenses, error, totalCount, fetchData } =
         useSupabaseFetch();
@@ -44,11 +49,11 @@ export function useExpensesTable(filters) {
         fetchData(
             "expenses",
             "id, fecha, descripcion, monto, moneda, forma_pago, categoria_id, categories(nombre)",
-            { orderBy: { column: "fecha", ascending: true } },
+            { orderBy: { column: sortConfig.key, ascending: sortConfig.direction === "asc" } },
             filters,
             { from, to }
         );
-    }, [filters, from, to, fetchData]);
+    }, [filters, from, to, fetchData, sortConfig]);
 
     useEffect(() => {
         reloadExpenses();
@@ -95,6 +100,10 @@ export function useExpensesTable(filters) {
         startRecord,
         endRecord,
         pageNumbers,
+
+        // sorting
+        sortConfig,
+        setSortConfig,
 
         // helpers
         reloadExpenses,

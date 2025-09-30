@@ -17,17 +17,19 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
             {expenses.map((exp) => (
                 <tr key={exp.id}>
                     <td>{formatDate(exp.fecha, "es-cr")}</td>
-                    <td>{exp.descripcion}</td>
-
+                    <td className={styles.description}
+                        title={exp.descripcion}>
+                        {exp.descripcion}
+                    </td>
                     {/* ✅ monto alineado a la derecha con badge de moneda */}
-                    <td className={styles.amountCol}>
+                    < td className={styles.amountCol} >
                         {formatNumber(exp.monto)}
                         <span
                             className={`${styles.currencyBadge} ${styles[exp.moneda?.toLowerCase()]}`}
                         >
                             {exp.moneda}
                         </span>
-                    </td>
+                    </td >
 
                     <td>
                         <span
@@ -42,7 +44,7 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
                             {exp.categories?.nombre ?? "—"}
                         </span>
                     </td> */}
-                    <td className={styles.categoryText}>
+                    <td className={exp.categories?.nombre.toLowerCase() === "uncategorized" ? styles.uncategorized : ""}>
                         {exp.categories?.nombre ?? "—"}
                     </td>
                     <td>
@@ -62,8 +64,9 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
                             <FaTrash />
                         </button>
                     </td>
-                </tr>
-            ))}
+                </tr >
+            ))
+            }
         </>
     );
 }

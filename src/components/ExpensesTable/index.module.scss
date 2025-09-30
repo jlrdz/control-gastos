@@ -91,14 +91,48 @@
         white-space: nowrap;
     }
 
-    th.amountCol {
-        text-align: right; // ✅ encabezado alineado con sus datos
+    /* === Ajustes de ancho por columna === */
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 15%; // Date
     }
 
-    /* ✅ montos alineados a la derecha */
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 35%; // Description
+    }
+
+    th.amountCol,
     td.amountCol {
+        width: 15%; // Amount
         text-align: right;
-        font-variant-numeric: tabular-nums; // números más fáciles de comparar
+        font-variant-numeric: tabular-nums;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        width: 15%; // Payment Method
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+        width: 15%; // Category
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+        width: 80px;
+        /* 👈 ancho fijo en px, suficiente para los botones */
+        text-align: center;
+        /* centra el contenido */
+    }
+
+    td:last-child {
+        display: flex;
+        justify-content: center;
+        /* íconos centrados */
+        align-items: center;
+        gap: 0.5rem;
     }
 
     tr:nth-child(even) td {
@@ -133,168 +167,160 @@
     @extend .badge;
 
     &.crc {
-        background: rgba(255, 255, 255, 0.15); // gris translúcido
+        background: rgba(255, 255, 255, 0.15);
         color: #e0e0e0;
     }
 
     &.usd {
-        background: rgba(25, 118, 210, 0.15); // azul translúcido
+        background: rgba(25, 118, 210, 0.15);
         color: #2196f3;
     }
 }
-
-
 
 /* === Payment Method === */
 .paymentBadge {
     @extend .badge;
 
     &.visa {
-        background: rgba(33, 150, 243, 0.15); // azul translúcido
+        background: rgba(33, 150, 243, 0.15);
         color: #42a5f5;
     }
 
     &.amex {
-        background: rgba(0, 188, 212, 0.15); // celeste translúcido
+        background: rgba(0, 188, 212, 0.15);
         color: #26c6da;
     }
 
     &.mastercard {
-        background: rgba(244, 67, 54, 0.15); // rojo translúcido
+        background: rgba(244, 67, 54, 0.15);
         color: #ef5350;
     }
 
     &.other {
-        background: rgba(255, 255, 255, 0.1); // fallback neutro
+        background: rgba(255, 255, 255, 0.1);
         color: #bbb;
     }
 }
 
 /* === Categories === */
-/* === Categories Badges === */
-/* === Category === */
 .categoryBadge {
     @extend .badge;
 
     &.groceries {
-        background: rgba(76, 175, 80, 0.12); // verde muy suave
+        background: rgba(76, 175, 80, 0.12);
         color: #81c784;
     }
 
     &.restaurant {
-        background: rgba(33, 150, 243, 0.12); // azul suave
+        background: rgba(33, 150, 243, 0.12);
         color: #64b5f6;
     }
 
     &.gifts {
-        background: rgba(156, 39, 176, 0.12); // púrpura apagado
+        background: rgba(156, 39, 176, 0.12);
         color: #ba68c8;
     }
 
     &.pet {
-        background: rgba(255, 193, 7, 0.12); // dorado muy bajo
+        background: rgba(255, 193, 7, 0.12);
         color: #fbc02d;
     }
 
     &.accommodation {
-        background: rgba(3, 169, 244, 0.12); // azul cielo tenue
+        background: rgba(3, 169, 244, 0.12);
         color: #4fc3f7;
     }
 
     &.health {
-        background: rgba(233, 30, 99, 0.12); // rosa oscuro discreto
+        background: rgba(233, 30, 99, 0.12);
         color: #f06292;
     }
 
     &.drugStore {
-        background: rgba(0, 150, 136, 0.12); // teal muy suave
+        background: rgba(0, 150, 136, 0.12);
         color: #4db6ac;
     }
 
     &.electronics {
-        background: rgba(158, 158, 158, 0.12); // gris neutro
+        background: rgba(158, 158, 158, 0.12);
         color: #bdbdbd;
     }
 
     &.clothesShoes {
-        background: rgba(63, 81, 181, 0.12); // azul índigo
+        background: rgba(63, 81, 181, 0.12);
         color: #7986cb;
     }
 
     &.utilities {
-        background: rgba(121, 85, 72, 0.12); // marrón apagado
+        background: rgba(121, 85, 72, 0.12);
         color: #a1887f;
     }
 
     &.uncategorized {
-        background: rgba(255, 255, 255, 0.08); // gris muy neutro
+        background: rgba(255, 255, 255, 0.08);
         color: #e0e0e0;
     }
 
     &.apps {
-        background: rgba(103, 58, 183, 0.12); // violeta sobrio
+        background: rgba(103, 58, 183, 0.12);
         color: #9575cd;
     }
 
     &.mortage {
-        background: rgba(96, 125, 139, 0.12); // azul grisáceo
+        background: rgba(96, 125, 139, 0.12);
         color: #90a4ae;
     }
 
     &.transportation {
-        background: rgba(2, 136, 209, 0.12); // azul moderado
+        background: rgba(2, 136, 209, 0.12);
         color: #29b6f6;
     }
 
     &.fuel {
-        background: rgba(255, 87, 34, 0.12); // naranja apagado
+        background: rgba(255, 87, 34, 0.12);
         color: #ff7043;
     }
 
     &.vehiculeInsurance {
-        background: rgba(46, 125, 50, 0.12); // verde profundo
+        background: rgba(46, 125, 50, 0.12);
         color: #66bb6a;
     }
 
     &.vehiculeMaintenance {
-        background: rgba(0, 121, 107, 0.12); // teal oscuro
+        background: rgba(0, 121, 107, 0.12);
         color: #4db6ac;
     }
 
     &.houseMaintenance {
-        background: rgba(84, 110, 122, 0.12); // gris azulado
+        background: rgba(84, 110, 122, 0.12);
         color: #90a4ae;
     }
 
     &.lifeEntertaiment {
-        background: rgba(233, 30, 99, 0.12); // rosa apagado
+        background: rgba(233, 30, 99, 0.12);
         color: #f48fb1;
     }
 
     &.holiday {
-        background: rgba(255, 152, 0, 0.12); // ámbar suave
+        background: rgba(255, 152, 0, 0.12);
         color: #ffb74d;
     }
 
     &.home {
-        background: rgba(117, 117, 117, 0.12); // gris neutro oscuro
+        background: rgba(117, 117, 117, 0.12);
         color: #bdbdbd;
     }
 }
 
 /* ===== Category text (sobrio) ===== */
 .categoryText {
-    color: #ccc; // gris claro
-    font-style: italic; // opcional, para diferenciar sin badge
+    color: #ccc;
+    font-style: italic;
 }
-
-
-
-
 
 /* Overlay con spinner */
 .overlay {
-    position: absolute; // ✅ ahora cubre todo el wrapper
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -303,7 +329,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10; // subido para estar por encima de header + body
+    z-index: 10;
 }
 
 .spinner {
@@ -354,4 +380,25 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
+}
+
+.description {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td.uncategorized {
+    color: #ff6b6b;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.table tr {
+    overflow: visible;
+}
+
+.table td {
+    overflow: visible;
 }

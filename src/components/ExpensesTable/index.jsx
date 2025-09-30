@@ -6,6 +6,7 @@ import styles from "./index.module.scss";
 import TableSummary from "../ExpensesSummary";
 import { useExpensesTable } from "../../hooks/useExpensesTable";
 import ExpensesRows from "../ExpensesRows";
+import Sorting from "../Sorting";
 
 function ExpensesTable({ filters }) {
     const {
@@ -15,7 +16,8 @@ function ExpensesTable({ filters }) {
         deleting, handleDelete,
         currentPage, totalPages, pageSize, setPageSize,
         nextPage, prevPage, goToPage, startRecord, endRecord, pageNumbers,
-        reloadExpenses, handleInsertLoading, handleEditLoading
+        reloadExpenses, handleInsertLoading, handleEditLoading,
+        sortConfig, setSortConfig
     } = useExpensesTable(filters);
 
     return (
@@ -36,11 +38,31 @@ function ExpensesTable({ filters }) {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th className={styles.amountCol}>Amount</th>
-                            <th>Payment method</th>
-                            <th>Category</th>
+                            <th>
+                                <Sorting columnKey="fecha" sortConfig={sortConfig} setSortConfig={setSortConfig}>
+                                    Date
+                                </Sorting>
+                            </th>
+                            <th>
+                                <Sorting columnKey="descripcion" sortConfig={sortConfig} setSortConfig={setSortConfig}>
+                                    Description
+                                </Sorting>
+                            </th>
+                            <th className={styles.amountCol}>
+                                <Sorting columnKey="monto" sortConfig={sortConfig} setSortConfig={setSortConfig}>
+                                    Amount
+                                </Sorting>
+                            </th>
+                            <th>
+                                <Sorting columnKey="forma_pago" sortConfig={sortConfig} setSortConfig={setSortConfig}>
+                                    Payment method
+                                </Sorting>
+                            </th>
+                            <th>
+                                <Sorting columnKey="categories(nombre)" sortConfig={sortConfig} setSortConfig={setSortConfig}>
+                                    Category
+                                </Sorting>
+                            </th>
                             <th>Actions</th>
                         </tr>
                     </thead>

@@ -76,6 +76,7 @@ export const useExpenseForm = (
           moneda: safeValues.moneda,
           forma_pago: safeValues.forma_pago,
           categoria_id: safeValues.categoria_id || null,
+          origen: "manual",
         });
       }
 

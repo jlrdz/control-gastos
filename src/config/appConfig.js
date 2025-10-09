@@ -11,7 +11,7 @@ export const APP_CONFIG = {
     // Theme configuration for the UI.
     // `default` sets the starting theme, while `available` lists all options.
     theme: {
-        default: "light",
+        default: "dark",
         available: ["light", "dark"],
     },
 

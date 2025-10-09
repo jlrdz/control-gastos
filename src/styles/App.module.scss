@@ -1,27 +1,27 @@
-@use "./variables" as v;
+// @use "./variables" as v;
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+// #root {
+//   max-width: 1280px;
+//   margin: 0 auto;
+//   padding: 2rem;
 
-  text-align: left;
+//   text-align: left;
 
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
+//   display: flex;
+//   flex-direction: column;
+//   gap: 2rem;
+// }
 
-.title {
-  text-align: left; // 👈 alineado a la izquierda
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: v.$color-primary;
-  margin: 0 0 1.5rem 0; // 👈 espacio hacia abajo
-}
+// .title {
+//   text-align: left; // 👈 alineado a la izquierda
+//   font-size: 1.5rem;
+//   font-weight: 600;
+//   color: v.$color-primary;
+//   margin: 0 0 1.5rem 0; // 👈 espacio hacia abajo
+// }
 
-.subtitle {
-  font-size: 0.9rem;
-  color: #aaa;
-  margin: -0.75rem 0 1.5rem 0; // se acerca al título y mantiene aire abajo
-}
+// .subtitle {
+//   font-size: 0.9rem;
+//   color: #aaa;
+//   margin: -0.75rem 0 1.5rem 0; // se acerca al título y mantiene aire abajo
+// }

@@ -161,3 +161,7 @@
 select:invalid {
     color: #aaa; // ✅ gris para reforzar "pendiente de selección"
 }
+
+.modal-open {
+    overflow: hidden
+}

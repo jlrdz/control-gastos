@@ -1,16 +1,37 @@
+import { useLocation } from "react-router-dom";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
+import { useLocale } from "../../context/LocaleContext";
+
 export default function Topbar() {
+  const { pathname } = useLocation();
+  const { t } = useLocale();
+
+  const TITLES = {
+    "/": t.overview,
+    "/expenses": t.track,
+    "/budgets": t.manage,
+    "/goals": t.monitor,
+    "/settings": t.customize,
+  };
+
+  const pageTitle = TITLES[pathname] || t.dashboard;
+
   return (
-    <header className="sticky top-0 z-10 h-14 bg-[var(--surface)]/80 backdrop-blur border-b border-white/5 flex items-center justify-between px-3 md:px-4">
-      <div className="font-medium tracking-tight text-[var(--text)]/90">
-        <h1 className="text-3xl font-semibold text-muted-foreground">
-          Financial Overview
-        </h1>
+    <header
+      className="
+        sticky top-0 z-30 flex items-center justify-between 
+        px-6 py-4 bg-[var(--surface)] text-[var(--text)]
+        shadow-[var(--sidebar-shadow)] transition-all duration-300
+      "
+    >
+      <div className="flex items-baseline">
+        <h1 className="text-lg font-semibold tracking-tight">{pageTitle}</h1>
       </div>
-      <div className="flex items-center gap-2">
-        {/* Aquí irán: selector de mes, tema, idioma, usuario y botón de acción */}
-        <button className="h-9 px-3 rounded-xl bg-white/5 hover:bg-white/10 transition">
-          Action
-        </button>
+
+      <div className="flex items-center gap-3 relative">
+        <ThemeSwitcher />
+        <LanguageSwitcher />
       </div>
     </header>
   );

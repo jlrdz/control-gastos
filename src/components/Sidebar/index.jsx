@@ -1,11 +1,78 @@
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { NAV_ITEMS } from "../../config/routes";
+import { Menu } from "lucide-react";
+import Tooltip from "../../components/Tooltip";
+import { useLocale } from "../../context/LocaleContext";
+
 export default function Sidebar() {
-  // colapsable lo implementamos en un paso siguiente
+  const { t } = useLocale();
+  const [collapsed, setCollapsed] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState(null);
+
   return (
-    <aside className="hidden md:flex w-64 shrink-0 bg-[var(--surface)] border-r border-white/5">
-      <nav className="p-3 w-full">
-        {/* Aquí irán los items con estados activos/hover e iconos */}
-        <div className="text-sm/6 text-[var(--text)]/70">Sidebar</div>
+    <aside
+      style={{ boxShadow: "var(--sidebar-shadow)" }}
+      className={`${
+        collapsed ? "w-20" : "w-64"
+      } min-h-dvh bg-[var(--surface)] border-r border-[var(--border)] transition-all duration-300 flex flex-col shadow-[6px_0_10px_rgba(0,0,0,0.15)] relative z-40`}
+    >
+      <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
+        {!collapsed && (
+          <span className="text-[var(--text)] font-semibold  tracking-tight text-lg">
+            Expense&nbsp;Tracker (change)
+          </span>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-[var(--text)]/70 hover:text-[var(--text)] transition cursor-pointer"
+        >
+          <Menu size={20} />
+        </button>
+      </div>
+
+      <nav className="flex-1 p-2 space-y-1 relative">
+        {NAV_ITEMS.map(({ path, key, icon: Icon }) => (
+          <div
+            key={path}
+            onMouseEnter={() => setHoveredItem(label)}
+            onMouseLeave={() => setHoveredItem(null)}
+            className="relative"
+          >
+            <NavLink
+              to={path}
+              end
+              className={({ isActive }) =>
+                `
+                group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative hover:scale-[1.02] active:scale-[0.98] cursor-pointer
+                ${
+                  isActive
+                    ? "bg-[var(--active-bg)] text-[var(--active-text)] shadow-[var(--active-shadow)] border-l-2"
+                    : "text-[var(--text)]/70 hover:bg-[var(--hover-surface)] hover:text-[var(--text)]"
+                }
+              `
+              }
+            >
+              <Icon size={18} strokeWidth={2} />
+              {!collapsed && <span>{t[key]}</span>}
+            </NavLink>
+
+            {collapsed && (
+              <Tooltip
+                label={label}
+                visible={hoveredItem === label}
+                position="right"
+              />
+            )}
+          </div>
+        ))}
       </nav>
+
+      {!collapsed && (
+        <div className="p-4 border-t border-[var(--border)] text-xs text-[var(--text)]/50">
+          <span>v1.0.0</span>
+        </div>
+      )}
     </aside>
   );
 }

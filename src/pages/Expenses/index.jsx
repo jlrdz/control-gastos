@@ -1,10 +1,19 @@
+import { useState } from "react";
+import Filters from "../../components/Filters";
+import ExpensesTable from "../../components/ExpensesTable";
+import Card from "../../components/Card";
+
 export default function Expenses() {
+  const [filters, setFilters] = useState({});
+
   return (
     <section className="space-y-2">
-      <h1 className="text-xl md:text-2xl font-semibold">Gastos</h1>
-      <p className="text-[var(--text)]/70 text-sm">
-        Tabla y filtros irán aquí.
-      </p>
+      <Card>
+        <Filters onApply={setFilters} />
+      </Card>
+      <Card>
+        <ExpensesTable filters={filters} />
+      </Card>
     </section>
   );
 }

@@ -19,4 +19,6 @@ export const constants = {
     { id: "CASH", nombre: "Cash" },
     { id: "TRANSFER", nombre: "Transfer" }
   ]
+
+  
 };

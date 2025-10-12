@@ -4,7 +4,7 @@
 
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.556 0 0);;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -36,11 +36,17 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --active-bg: oklch(0.99 0 0);
+  --active-text: oklch(0.25 0 0);
+  --active-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.08),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+  --sidebar-shadow: 8px 8px 16px rgba(0, 0, 0, 0.06),
+    -8px -8px 16px rgba(255, 255, 255, 0.9);
 }
 
 .dark {
   --background: #1a1d23;
-  --foreground: oklch(0.985 0 0);
+  --foreground: oklch(0.6 0 0);
   --card: #1a1d23;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
@@ -61,7 +67,7 @@
   --chart-1: oklch(0.68 0.12 200);
   --chart-2: oklch(0.55 0.11 250);
   --chart-3: oklch(0.76 0.13 35);
-  --chart-4: oklch(0.80 0.13 85);
+  --chart-4: oklch(0.8 0.13 85);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
@@ -71,6 +77,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --active-bg: oklch(0.3 0 0 / 0.8);
+  --active-text: oklch(0.9 0 0);
+  --active-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.6),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.05);
+  --sidebar-shadow: 6px 0 10px rgba(0, 0, 0, 0.25);
 }
 
 @theme inline {
@@ -121,6 +132,21 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out forwards;
 }
 
 @layer utilities {

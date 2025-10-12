@@ -21,7 +21,6 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
                         title={exp.descripcion}>
                         {exp.descripcion}
                     </td>
-                    {/* ✅ monto alineado a la derecha con badge de moneda */}
                     < td className={styles.amountCol} >
                         {formatNumber(exp.monto)}
                         <span

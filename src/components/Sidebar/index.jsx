@@ -35,7 +35,7 @@ export default function Sidebar() {
         {NAV_ITEMS.map(({ path, key, icon: Icon }) => (
           <div
             key={path}
-            onMouseEnter={() => setHoveredItem(label)}
+            onMouseEnter={() => setHoveredItem(key)}
             onMouseLeave={() => setHoveredItem(null)}
             className="relative"
           >
@@ -59,8 +59,8 @@ export default function Sidebar() {
 
             {collapsed && (
               <Tooltip
-                label={label}
-                visible={hoveredItem === label}
+                label={t[key]}
+                visible={hoveredItem === key}
                 position="right"
               />
             )}

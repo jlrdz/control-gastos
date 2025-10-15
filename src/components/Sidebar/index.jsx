@@ -19,13 +19,13 @@ export default function Sidebar() {
     >
       <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
         {!collapsed && (
-          <span className="text-[var(--text)] font-semibold  tracking-tight text-lg">
-            Expense&nbsp;Tracker (change)
+          <span className="text-[var(--text)] dark:text-[var(--primary)] font-semibold  tracking-tight text-lg">
+            {t["app_name"]}
           </span>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="text-[var(--text)]/70 hover:text-[var(--text)] transition cursor-pointer"
+          className="text-[var(--text)]/70 dark:text-[var(--primary)] hover:text-[var(--text)] transition cursor-pointer"
         >
           <Menu size={20} />
         </button>
@@ -48,7 +48,7 @@ export default function Sidebar() {
                 ${
                   isActive
                     ? "bg-[var(--active-bg)] text-[var(--active-text)] shadow-[var(--active-shadow)] border-l-2"
-                    : "text-[var(--text)]/70 hover:bg-[var(--hover-surface)] hover:text-[var(--text)]"
+                    : "text-[var(--text)]/70 dark:text-[var(--primary)] hover:bg-[var(--hover-surface)] hover:text-[var(--text)]"
                 }
               `
               }
@@ -69,7 +69,7 @@ export default function Sidebar() {
       </nav>
 
       {!collapsed && (
-        <div className="p-4 border-t border-[var(--border)] text-xs text-[var(--text)]/50">
+        <div className="p-4 border-t border-[var(--border)] text-xs text-[var(--text)]/50 dark:text-[var(--primary)]">
           <span>v1.0.0</span>
         </div>
       )}

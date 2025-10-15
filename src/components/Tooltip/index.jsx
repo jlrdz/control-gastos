@@ -14,8 +14,9 @@ export default function Tooltip({ label, visible, position = "top" }) {
           absolute ${positions[position]}
           px-2 py-1 rounded-md text-xs whitespace-nowrap shadow-lg
           opacity-0 animate-fadeIn pointer-events-none z-50
-          bg-[color-mix(in_oklch,var(--surface),black_30%)]
+          bg-[var(--card)]
           text-[var(--text)]
+          dark:text-[var(--primary)]
           border border-[color-mix(in_oklch,var(--text),transparent_85%)]
         `}
     >

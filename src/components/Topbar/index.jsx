@@ -15,13 +15,13 @@ export default function Topbar() {
     "/settings": t.customize,
   };
 
-  const pageTitle = TITLES[pathname] || t.dashboard;
+  const pageTitle = TITLES[pathname] || t.home;
 
   return (
     <header
       className="
         sticky top-0 z-30 flex items-center justify-between 
-        px-6 py-4 bg-[var(--surface)] text-[var(--text)]
+        px-6 py-4 bg-[var(--surface)] text-[var(--text) dark:text-[var(--primary)]
         shadow-[var(--sidebar-shadow)] transition-all duration-300
       "
     >

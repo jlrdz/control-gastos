@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Globe } from "lucide-react";
 import Tooltip from "../../components/Tooltip";
 import { useLocale } from "../../context/LocaleContext";
-
+import clsx from "clsx";
 
 export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
@@ -64,23 +64,25 @@ export default function LanguageSwitcher() {
 
       {open && (
         <div
-          className="
-            absolute right-0 mt-2 w-36 rounded-xl p-2 z-50
-            bg-[var(--surface)] shadow-[2px_2px_6px_rgba(0,0,0,0.25),_-2px_-2px_6px_rgba(255,255,255,0.05)]
-            border border-[color-mix(in_oklch,var(--text),transparent_85%)]
-            animate-fadeIn
-          "
+          className={clsx(
+            "absolute right-0 mt-2 w-36 z-50 rounded-md border",
+            "bg-[var(--card)]",
+            "border-[var(--muted-foreground)]/20",
+            "shadow-[4px_4px_8px_rgba(0,0,0,0.6),_-4px_-4px_8px_rgba(255,255,255,0.05)]",
+            "overflow-y-auto max-h-[10rem]",
+            "p-2 animate-fadeIn transition-all duration-200"
+          )}
         >
           {languages.map(({ code, label }) => (
             <button
               key={code}
               onClick={() => handleSelect(code)}
               className={`
-                w-full text-left px-3 py-2 rounded-md text-sm capitalize
-                transition-all duration-150 cursor-pointer
+                w-full text-left px-3 py-2 rounded-md text-sm capitalize 
+                transition-all duration-150 cursor-pointer hover:bg-[var(--hover-surface)]
                 ${
                   lang === code
-                    ? "bg-[color-mix(in_oklch,var(--surface),black_15%)] text-[var(--text)] font-medium"
+                    ? "bg-[var(--selected-surface)] text-[var(--text)] font-medium"
                     : "text-[var(--text)]/70 hover:bg-[color-mix(in_oklch,var(--surface),black_10%)] hover:text-[var(--text)]"
                 }
               `}

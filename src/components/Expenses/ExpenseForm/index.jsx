@@ -1,8 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { useExpenseForm } from "../../hooks/useExpenseForm";
-import CategorySelect from "../CategorySelect";
-import CurrencySelect from "../CurrencySelect";
-import PaymentMethodSelect from "../PaymentMethodSelect";
+import { useExpenseForm } from "../../../hooks/useExpenseForm";
+import CategorySelect from "../../Selects/CategorySelect";
+import CurrencySelect from "../../Selects/CurrencySelect";
+import PaymentMethodSelect from "../../Selects/PaymentMethodSelect";
 import styles from "./index.module.scss";
 
 /**
@@ -21,12 +21,10 @@ const ExpenseForm = forwardRef(function ExpenseForm(
 
     const formRef = useRef(null);
 
-    // ✅ Solo se ejecuta cuando cambia `loading`
     useEffect(() => {
         if (typeof onLoadingChange === "function") {
             onLoadingChange(loading);
         }
-        // no dependemos de `onLoadingChange` para evitar loops infinitos
     }, [loading]);
 
     useImperativeHandle(ref, () => ({
@@ -35,7 +33,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
                 formRef.current.requestSubmit();
             }
         },
-        loading, // expose loading state
+        loading, 
     }));
 
     return (

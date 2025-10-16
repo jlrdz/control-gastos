@@ -1,123 +1,157 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useExpenseForm } from "../../../hooks/useExpenseForm";
+import Input from "../../Input";
 import CategorySelect from "../../Selects/CategorySelect";
 import CurrencySelect from "../../Selects/CurrencySelect";
 import PaymentMethodSelect from "../../Selects/PaymentMethodSelect";
-import styles from "./index.module.scss";
 
-/**
- * ExpenseForm component
- * Reusable for both "create" and "edit" modes.
- * If it receives an `id` in initialValues, it will update instead of insert.
- */
 const ExpenseForm = forwardRef(function ExpenseForm(
-    { onSuccess, closeModal, onLoadingChange, ...initialValues },
-    ref
+  { onSuccess, closeModal, onLoadingChange, ...initialValues },
+  ref
 ) {
-    const { state, changeValue, handleSubmit, loading, error } = useExpenseForm(
-        initialValues,
-        { onSuccess, closeModal }
-    );
+  const {
+    state,
+    changeValue,
+    handleSubmit,
+    loading,
+    error
+  } = useExpenseForm(initialValues, { onSuccess, closeModal });
 
-    const formRef = useRef(null);
+  const formRef = useRef(null);
 
-    useEffect(() => {
-        if (typeof onLoadingChange === "function") {
-            onLoadingChange(loading);
-        }
-    }, [loading]);
+  useEffect(() => {
+    if (typeof onLoadingChange === "function") {
+      onLoadingChange(loading);
+    }
+  }, [loading]);
 
-    useImperativeHandle(ref, () => ({
-        submit: () => {
-            if (formRef.current) {
-                formRef.current.requestSubmit();
-            }
-        },
-        loading, 
-    }));
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      if (formRef.current) formRef.current.requestSubmit();
+    },
+    loading,
+  }));
 
-    return (
-        <form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
-            {/* Date */}
-            <div>
-                <label className={styles.label}>Date:</label>
-                <input
-                    type="date"
-                    name="fecha"
-                    value={state.fecha}
-                    onChange={changeValue}
-                    required
-                    className={styles.input}
-                />
-            </div>
+  return (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 w-full"
+    >
+      {/* Date */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="fecha"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Date
+        </label>
+        <Input
+          type="date"
+          id="fecha"
+          name="fecha"
+          value={state.fecha}
+          onChange={changeValue}
+        //   required
+        />
+      </div>
 
-            {/* Description */}
-            <div>
-                <label className={styles.label}>Description:</label>
-                <input
-                    type="text"
-                    name="descripcion"
-                    value={state.descripcion}
-                    onChange={changeValue}
-                    required
-                    className={styles.input}
-                />
-            </div>
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="descripcion"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Description
+        </label>
+        <Input
+          type="text"
+          id="descripcion"
+          name="descripcion"
+          value={state.descripcion}
+          onChange={changeValue}
+          required
+        />
+      </div>
 
-            {/* Amount */}
-            <div>
-                <label className={styles.label}>Amount:</label>
-                <input
-                    type="number"
-                    name="monto"
-                    value={state.monto}
-                    onChange={changeValue}
-                    step="0.01"
-                    required
-                    className={styles.input}
-                />
-            </div>
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="monto"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Amount
+        </label>
+        <Input
+          type="number"
+          id="monto"
+          name="monto"
+          value={state.monto}
+          onChange={changeValue}
+          step="1000"
+          required
+        />
+      </div>
 
-            {/* Currency */}
-            <div>
-                <label className={styles.label}>Currency:</label>
-                <CurrencySelect
-                    value={state.moneda}
-                    onChange={changeValue}
-                    showAll={false}
-                    placeholder="-- Select --"
-                    className={styles.select}
-                />
-            </div>
+      {/* Currency */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="moneda"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Currency
+        </label>
+        <CurrencySelect
+          id="moneda"
+          value={state.moneda}
+          onChange={changeValue}
+          showAll={false}
+          required
+        />
+      </div>
 
-            {/* Payment Method */}
-            <div>
-                <label className={styles.label}>Payment Method:</label>
-                <PaymentMethodSelect
-                    value={state.forma_pago}
-                    onChange={changeValue}
-                    showAll={false}
-                    placeholder="-- Select --"
-                    className={styles.select}
-                />
-            </div>
+      {/* Payment Method */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="forma_pago"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Payment Method
+        </label>
+        <PaymentMethodSelect
+          id="forma_pago"
+          value={state.forma_pago}
+          onChange={changeValue}
+          showAll={false}
+          required
+        />
+      </div>
 
-            {/* Category */}
-            <div>
-                <label className={styles.label}>Category:</label>
-                <CategorySelect
-                    value={state.categoria_id}
-                    onChange={changeValue}
-                    showAll={false}
-                    placeholder="-- Select --"
-                    className={styles.select}
-                />
-            </div>
+      {/* Category */}
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="categoria_id"
+          className="text-sm font-medium text-foreground/80 dark:text-primary"
+        >
+          Category
+        </label>
+        <CategorySelect
+          id="categoria_id"
+          value={state.categoria_id}
+          onChange={changeValue}
+          showAll={false}
+          required
+        />
+      </div>
 
-            {/* Error feedback */}
-            {error && <p className={styles.error}>{error}</p>}
-        </form>
-    );
+      {/* Error feedback */}
+      {error && (
+        <p className="text-sm text-red-500 font-medium mt-2 text-center">
+          {error}
+        </p>
+      )}
+    </form>
+  );
 });
 
 export default ExpenseForm;

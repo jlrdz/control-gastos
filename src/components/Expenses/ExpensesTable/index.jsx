@@ -11,7 +11,6 @@ import Loader from "../../Loader";
 import ModalPortal from "../../Modal/ModalPortal";
 import { Plus } from "lucide-react";
 
-
 function ExpensesTable({ filters }) {
   const {
     expenses,
@@ -50,7 +49,7 @@ function ExpensesTable({ filters }) {
           </div>
 
           <PrimaryButton
-            onClick={() => setModal((m) => ({ ...m, insert: true }))}
+            onClick={() => setModal((m) => ({ ...m, isInsert: true }))}
             className="z-10 translate-y-[-1px]"
           >
             <Plus size={16} className="mr-2" />
@@ -137,8 +136,12 @@ function ExpensesTable({ filters }) {
                 ) : expenses?.length > 0 ? (
                   <ExpensesRows
                     expenses={expenses}
-                    onEdit={(exp) => setModal((m) => ({ ...m, edit: exp }))}
-                    onDelete={(id) => setModal((m) => ({ ...m, deleteId: id }))}
+                    onEdit={(exp) =>
+                      setModal((m) => ({ ...m, editObject: exp }))
+                    }
+                    onDelete={(id) =>
+                      setModal((m) => ({ ...m, deleteObjectId: id }))
+                    }
                     deleting={deleting}
                   />
                 ) : (
@@ -174,8 +177,8 @@ function ExpensesTable({ filters }) {
       <ModalPortal>
         <Modal
           title="Add Expense"
-          isOpen={modal.insert}
-          onClose={() => setModal((m) => ({ ...m, insert: false }))}
+          isOpen={modal.isInsert}
+          onClose={() => setModal((m) => ({ ...m, isInsert: false }))}
           primaryLabel={modal.insertLoading ? "Saving..." : "Save"}
           primaryDisabled={modal.insertLoading}
           onPrimary={() => expenseFormRef.current?.submit()}
@@ -183,21 +186,23 @@ function ExpensesTable({ filters }) {
           primaryVariant="primary"
           secondaryVariant="secondary"
         >
-          <ExpenseForm
-            ref={expenseFormRef}
-            onSuccess={() => {
-              setModal((m) => ({ ...m, insert: false }));
-              reloadExpenses();
-            }}
-            closeModal={() => setModal((m) => ({ ...m, insert: false }))}
-            onLoadingChange={handleInsertLoading}
-          />
+          {modal.isInsert && (
+            <ExpenseForm
+              ref={expenseFormRef}
+              onSuccess={() => {
+                setModal((m) => ({ ...m, isInsert: false }));
+                reloadExpenses();
+              }}
+              closeModal={() => setModal((m) => ({ ...m, isInsert: false }))}
+              onLoadingChange={handleInsertLoading}
+            />
+          )}
         </Modal>
 
         <Modal
           title="Edit Expense"
-          isOpen={!!modal.edit}
-          onClose={() => setModal((m) => ({ ...m, edit: null }))}
+          isOpen={!!modal.editObject}
+          onClose={() => setModal((m) => ({ ...m, editObject: null }))}
           primaryLabel={modal.editLoading ? "Updating..." : "Update"}
           primaryDisabled={modal.editLoading}
           onPrimary={() => editFormRef.current?.submit()}
@@ -205,30 +210,30 @@ function ExpensesTable({ filters }) {
           primaryVariant="primary"
           secondaryVariant="secondary"
         >
-          {modal.edit && (
+          {!!modal.editObject && (
             <ExpenseForm
               ref={editFormRef}
               onSuccess={() => {
-                setModal((m) => ({ ...m, edit: null }));
+                setModal((m) => ({ ...m, editObject: null }));
                 reloadExpenses();
               }}
-              closeModal={() => setModal((m) => ({ ...m, edit: null }))}
+              closeModal={() => setModal((m) => ({ ...m, editObject: null }))}
               onLoadingChange={handleEditLoading}
-              {...modal.edit}
+              {...modal.editObject}
             />
           )}
         </Modal>
 
         <Modal
           title="Delete Expense"
-          isOpen={!!modal.deleteId}
-          onClose={() => setModal((m) => ({ ...m, deleteId: null }))}
+          isOpen={!!modal.deleteObjectId}
+          onClose={() => setModal((m) => ({ ...m, deleteObjectId: null }))}
           primaryLabel={deleting ? "Deleting..." : "Delete"}
           primaryDisabled={deleting}
           onPrimary={async () => {
-            if (modal.deleteId) {
-              await handleDelete(modal.deleteId);
-              setModal((m) => ({ ...m, deleteId: null }));
+            if (modal.deleteObjectId) {
+              await handleDelete(modal.deleteObjectId);
+              setModal((m) => ({ ...m, deleteObjectId: null }));
               reloadExpenses();
             }
           }}

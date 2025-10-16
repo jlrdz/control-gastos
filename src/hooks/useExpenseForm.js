@@ -1,5 +1,5 @@
 import { useForm } from "./useForm";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useCrudNotifications } from "./useCrudNotifications";
 import { useSupabaseInsert } from "./database/useSupabaseInsert";
 import { useSupabaseUpdate } from "./database/useSupabaseUpdate";
@@ -65,7 +65,7 @@ export const useExpenseForm = (
           monto: parseFloat(safeValues.monto),
           moneda: safeValues.moneda,
           forma_pago: safeValues.forma_pago,
-          categoria_id: safeValues.categoria_id || null,
+          categoria_id: safeValues.categoria_id,
         });
       } else {
         // Insert
@@ -75,7 +75,7 @@ export const useExpenseForm = (
           monto: parseFloat(safeValues.monto),
           moneda: safeValues.moneda,
           forma_pago: safeValues.forma_pago,
-          categoria_id: safeValues.categoria_id || null,
+          categoria_id: safeValues.categoria_id,
           origen: "manual",
         });
       }
@@ -95,6 +95,13 @@ export const useExpenseForm = (
       notifyError(safeValues.id ? "update" : "create", "Expense");
     }
   };
+
+  useEffect(() => {
+    return () => {
+      handleReset();
+      setError(null);
+    };
+  }, []);
 
   return {
     state: safeValues,

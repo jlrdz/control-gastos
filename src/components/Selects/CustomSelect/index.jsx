@@ -9,15 +9,12 @@ export default function CustomSelect({
   placeholder = "Select an option",
   className,
 }) {
-
   const handleChange = (e) => {
     onChange?.(e.target.value);
   };
 
   return (
-    <div
-      className={clsx("relative inline-block w-full", className)}
-    >
+    <div className={clsx("relative inline-block w-full", className)}>
       <select
         value={value || ""}
         onChange={handleChange}
@@ -25,7 +22,8 @@ export default function CustomSelect({
           "w-full appearance-none px-3 py-2 rounded-md text-sm",
           "bg-[var(--card)] text-[var(--primary)] border border-transparent",
           "shadow-[2px_2px_4px_rgba(0,0,0,0.45),_-2px_-2px_4px_rgba(255,255,255,0.04)]",
-          "focus:outline-none transition-all duration-200 cursor-pointer"
+          "focus:outline-none transition-all duration-200 cursor-pointer",
+          "focus:border-[oklch(var(--primary)/0.4)]"
         )}
       >
         <option value="" disabled hidden>

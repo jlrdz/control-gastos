@@ -9,9 +9,9 @@ export function useExpensesTable(filters) {
 
     // Estado unificado de modales + loading
     const [modal, setModal] = useState({
-        insert: false,
-        edit: null,       // objeto expense
-        deleteId: null,   // id del expense
+        isInsert: false,
+        editObject: null,       // objeto expense
+        deleteObjectId: null,   // id del expense
         insertLoading: false,
         editLoading: false,
     });
@@ -59,7 +59,6 @@ export function useExpensesTable(filters) {
         reloadExpenses();
     }, [reloadExpenses]);
 
-    // Callbacks estables para loading
     const handleInsertLoading = useCallback(
         (val) => setModal((m) => ({ ...m, insertLoading: val })),
         []

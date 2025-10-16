@@ -30,6 +30,7 @@ export default function Topbar() {
       </div>
 
       <div className="flex items-center gap-3 relative">
+      <a className="text-amber-500"> Recordar usar in8n para traducir y tambien que el sistema reconozca el tema del sistema para que muestre el tema por defecto</a>
         <ThemeSwitcher />
         <LanguageSwitcher />
       </div>

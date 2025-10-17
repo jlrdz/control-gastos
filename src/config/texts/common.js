@@ -12,7 +12,8 @@ export const COMMON_TEXTS = {
     track: "Track your daily spending",
     manage: "Manage your budget allocations",
     monitor: "Monitor your saving goals",
-    app_name: "Personal Finance System"
+    app_name: "Personal Finance System",
+    customize: "Manage your app settings",
   },
   es: {
     language: "Idioma",
@@ -27,6 +28,7 @@ export const COMMON_TEXTS = {
     track: "Controla tus gastos diarios",
     manage: "Gestiona tus presupuestos",
     monitor: "Monitorea tus metas de ahorro",
-    app_name: "Sistema de Finanzas Personales"
+    app_name: "Sistema de Finanzas Personales",
+    customize: "Administra la configuración de la app",
   },
 };

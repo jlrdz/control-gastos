@@ -8,6 +8,7 @@ export default function CustomSelect({
   onChange,
   placeholder = "Select an option",
   className,
+  ...props
 }) {
   const handleChange = (e) => {
     onChange?.(e.target.value);
@@ -16,6 +17,7 @@ export default function CustomSelect({
   return (
     <div className={clsx("relative inline-block w-full", className)}>
       <select
+        {...props}
         value={value || ""}
         onChange={handleChange}
         className={clsx(

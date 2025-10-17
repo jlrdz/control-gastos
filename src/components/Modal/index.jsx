@@ -102,7 +102,10 @@ export default function Modal({
             <Primary onClick={handlePrimary} disabled={primaryDisabled}>
               {primaryDisabled ? (
                 <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-[oklch(var(--foreground)/0.2)] border-t-[oklch(var(--primary))] rounded-full animate-spin"></span>
+                  <span
+                    className="w-4 h-4 border-[3px] border-[oklch(0.3_0.02_250_/_0.2)] 
+            border-t-[oklch(0.7_0.18_250)] rounded-full animate-spin shadow-[0_0_8px_oklch(var(--primary)/0.3)]"
+                  ></span>
                   {primaryLabel}
                 </span>
               ) : (

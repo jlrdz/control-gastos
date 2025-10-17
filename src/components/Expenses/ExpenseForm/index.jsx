@@ -4,18 +4,16 @@ import Input from "../../Input";
 import CategorySelect from "../../Selects/CategorySelect";
 import CurrencySelect from "../../Selects/CurrencySelect";
 import PaymentMethodSelect from "../../Selects/PaymentMethodSelect";
+import clsx from "clsx";
 
 const ExpenseForm = forwardRef(function ExpenseForm(
   { onSuccess, closeModal, onLoadingChange, ...initialValues },
   ref
 ) {
-  const {
-    state,
-    changeValue,
-    handleSubmit,
-    loading,
-    error
-  } = useExpenseForm(initialValues, { onSuccess, closeModal });
+  const { state, changeValue, handleSubmit, loading, error } = useExpenseForm(
+    initialValues,
+    { onSuccess, closeModal }
+  );
 
   const formRef = useRef(null);
 
@@ -31,6 +29,10 @@ const ExpenseForm = forwardRef(function ExpenseForm(
     },
     loading,
   }));
+
+  const handleSelectChange = (field) => (newValue) => {
+    changeValue({ target: { name: field, value: newValue } });
+  };
 
   return (
     <form
@@ -52,12 +54,12 @@ const ExpenseForm = forwardRef(function ExpenseForm(
           name="fecha"
           value={state.fecha}
           onChange={changeValue}
-        //   required
+          required
         />
       </div>
 
       {/* Description */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 relative">
         <label
           htmlFor="descripcion"
           className="text-sm font-medium text-foreground/80 dark:text-primary"
@@ -70,8 +72,19 @@ const ExpenseForm = forwardRef(function ExpenseForm(
           name="descripcion"
           value={state.descripcion}
           onChange={changeValue}
+          maxLength={60}
           required
         />
+        <span
+          className={clsx(
+            "absolute right-3 bottom-[7px] text-[10px] select-none",
+            state.descripcion.length >= 60
+              ? "text-red-500"
+              : "text-[color-mix(in_oklch,var(--primary),transparent_60%)]"
+          )}
+        >
+          {state.descripcion.length}/60
+        </span>
       </div>
 
       {/* Amount */}
@@ -88,7 +101,8 @@ const ExpenseForm = forwardRef(function ExpenseForm(
           name="monto"
           value={state.monto}
           onChange={changeValue}
-          step="1000"
+          min="0"
+          step="0.01"
           required
         />
       </div>
@@ -104,7 +118,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
         <CurrencySelect
           id="moneda"
           value={state.moneda}
-          onChange={changeValue}
+          onChange={handleSelectChange("moneda")}
           showAll={false}
           required
         />
@@ -121,7 +135,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
         <PaymentMethodSelect
           id="forma_pago"
           value={state.forma_pago}
-          onChange={changeValue}
+          onChange={handleSelectChange("forma_pago")}
           showAll={false}
           required
         />
@@ -138,7 +152,7 @@ const ExpenseForm = forwardRef(function ExpenseForm(
         <CategorySelect
           id="categoria_id"
           value={state.categoria_id}
-          onChange={changeValue}
+          onChange={handleSelectChange("categoria_id")}
           showAll={false}
           required
         />

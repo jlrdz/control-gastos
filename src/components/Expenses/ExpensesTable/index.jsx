@@ -59,14 +59,14 @@ function ExpensesTable({ filters }) {
         <div className="relative">
           <div
             className="
-          max-h-[28rem] overflow-y-auto rounded-xl relative
-          bg-[oklch(var(--card))]
-          shadow-[0_1px_2px_oklch(0_0_0_/_0.12)]
-          dark:shadow-[0_1px_3px_oklch(0_0_0_/_0.3)]
-          border-l border-[var(--muted)]
-          dark:border-[var(--muted)]
-          transition-all duration-300
-          "
+              max-h-[28rem] overflow-y-auto rounded-xl relative
+              bg-[oklch(var(--card))]
+              shadow-[0_1px_2px_oklch(0_0_0_/_0.12)]
+              dark:shadow-[0_1px_3px_oklch(0_0_0_/_0.3)]
+              border-l border-[var(--muted)]
+              dark:border-[var(--muted)]
+              transition-all duration-300
+            "
           >
             <table className="w-full border-collapse table-fixed min-w-[700px]">
               <thead

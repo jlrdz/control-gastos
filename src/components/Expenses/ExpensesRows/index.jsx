@@ -8,12 +8,14 @@ import { useState } from "react";
 function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
   const [hoveredEditId, setHoveredEditId] = useState(null);
   const [hoveredDeleteId, setHoveredDeleteId] = useState(null);
+  const [hoveredDescriptionId, setHoveredDescriptionId] = useState(null);
 
   return (
     <>
       {expenses.map((exp, index) => (
         <tr
           key={exp.id}
+          onDoubleClick={() => onEdit(exp)}
           className={`
             ${
               index % 2 === 0
@@ -23,19 +25,29 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
             hover:bg-[var(--hover-surface)]
             dark:hover:bg-[var(--hover-surface)]
             transition-colors duration-150
+            cursor-pointer
+            relative
           `}
         >
           {/* Fecha */}
-          <td className="px-4 py-2 text-sm text-[var(--primary)] whitespace-nowrap">
+          <td className="px-4 py-2 flex text-sm text-[var(--primary)] whitespace-nowrap">
             {formatDate(exp.fecha, "es-cr")}
           </td>
 
           {/* Descripción */}
-          <td
-            className="px-4 py-2 text-sm text-[var(--primary)] max-w-[320px] truncate"
-            title={exp.descripcion}
-          >
-            {exp.descripcion}
+          <td className="px-4 py-2 text-sm text-[var(--primary)] max-w-[320px]">
+            <div
+              className="relative"
+              onMouseEnter={() => setHoveredDescriptionId(exp.id)}
+              onMouseLeave={() => setHoveredDescriptionId(null)}
+            >
+              <span className="block max-w-[300px] truncate">{exp.descripcion}</span>
+              <Tooltip
+                label={exp.descripcion}
+                visible={hoveredDescriptionId === exp.id}
+                position="right"
+              />
+            </div>
           </td>
 
           {/* Monto + Moneda */}
@@ -61,9 +73,7 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
           </td>
 
           {/* Acciones */}
-          <td
-            className="px-4 py-2 flex justify-center items-center gap-3"
-          >
+          <td className="px-4 py-2 flex justify-center items-center gap-3">
             <div
               className="relative inline-block"
               onMouseEnter={() => setHoveredEditId(exp.id)}

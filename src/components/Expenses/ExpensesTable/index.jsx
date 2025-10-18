@@ -75,7 +75,7 @@ function ExpensesTable({ filters }) {
               dark:shadow-[0_1px_2px_oklch(0_0_0_/_0.25)]"
               >
                 <tr className="text-left text-[var(--primary)] text-sm font-semibold">
-                  <th className="px-4 py-3">
+                  <th className="px-4 py-3 w-[110px]">
                     <Sorting
                       columnKey="fecha"
                       sortConfig={sortConfig}
@@ -84,7 +84,7 @@ function ExpensesTable({ filters }) {
                       Date
                     </Sorting>
                   </th>
-                  <th className="px-4 py-3">
+                  <th className="px-4 py-3 w-[400px]">
                     <Sorting
                       columnKey="descripcion"
                       sortConfig={sortConfig}

@@ -35,18 +35,22 @@ function ExpensesRows({ expenses, onEdit, onDelete, deleting }) {
           </td>
 
           {/* Descripción */}
-          <td className="px-4 py-2 text-sm text-[var(--primary)] max-w-[320px]">
+          <td className="px-5 py-2 text-sm text-[var(--primary)] max-w-[400px]">
             <div
               className="relative"
               onMouseEnter={() => setHoveredDescriptionId(exp.id)}
               onMouseLeave={() => setHoveredDescriptionId(null)}
             >
-              <span className="block max-w-[300px] truncate">{exp.descripcion}</span>
-              <Tooltip
-                label={exp.descripcion}
-                visible={hoveredDescriptionId === exp.id}
-                position="right"
-              />
+              <span className="block max-w-[400px] truncate">
+                {exp.descripcion}
+              </span>
+              {exp.descripcion.length > 45 && (
+                <Tooltip
+                  label={exp.descripcion}
+                  visible={hoveredDescriptionId === exp.id}
+                  position="bottom"
+                />
+              )}
             </div>
           </td>
 

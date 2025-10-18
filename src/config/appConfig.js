@@ -8,13 +8,6 @@ export const APP_CONFIG = {
     // Example: "en-US", "es-CR".
     locale: "EN-US",
 
-    // Theme configuration for the UI.
-    // `default` sets the starting theme, while `available` lists all options.
-    theme: {
-        default: "dark",
-        available: ["light", "dark"],
-    },
-
     // Pagination configuration for tables and lists.
     // Defines the default number of items per page and the selectable options.
     pagination: {

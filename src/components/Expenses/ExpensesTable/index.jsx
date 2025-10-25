@@ -1,15 +1,15 @@
-import React from "react";
-import Pagination from "../../Pagination";
+import React, { useState } from "react";
+import Pagination from "../../Tables/Pagination";
 import Modal from "../../Modal";
 import ExpenseForm from "../ExpenseForm";
 import TableSummary from "../ExpensesSummary";
 import PrimaryButton from "../../Buttons/PrimaryButton";
 import { useExpensesTable } from "../../../hooks/useExpensesTable";
-import ExpensesRows from "../ExpensesRows";
-import Sorting from "../../Sorting";
-import Loader from "../../Loader";
 import ModalPortal from "../../Modal/ModalPortal";
 import { Plus } from "lucide-react";
+import ExpensesTableHeaders from "../ExpensesTableHeaders";
+import ExpensesTableRows from "../ExpensesTableRows";
+import CustomTable from "../../Tables/CustomTable";
 
 function ExpensesTable({ filters }) {
   const {
@@ -19,8 +19,6 @@ function ExpensesTable({ filters }) {
     totalCount,
     modal,
     setModal,
-    expenseFormRef,
-    editFormRef,
     deleting,
     handleDelete,
     currentPage,
@@ -40,6 +38,9 @@ function ExpensesTable({ filters }) {
     setSortConfig,
   } = useExpensesTable(filters);
 
+  const [triggerInsert, setTriggerInsert] = useState(false);
+  const [triggerEdit, setTriggerEdit] = useState(false);
+
   return (
     <>
       <div className="w-full min-h-[500px] flex flex-col min-w-[700px] relative">
@@ -56,109 +57,29 @@ function ExpensesTable({ filters }) {
             Add Expense
           </PrimaryButton>
         </div>
-        <div className="relative">
-          <div
-            className="
-              max-h-[28rem] overflow-y-auto rounded-xl relative
-              bg-[oklch(var(--card))]
-              shadow-[0_1px_2px_oklch(0_0_0_/_0.12)]
-              dark:shadow-[0_1px_3px_oklch(0_0_0_/_0.3)]
-              border-l border-[var(--muted)]
-              dark:border-[var(--muted)]
-              transition-all duration-300
-            "
-          >
-            <table className="w-full border-collapse table-fixed min-w-[700px]">
-              <thead
-                className="bg-[var(--card)] dark:bg-[var(--card)] sticky top-0 z-[2] backdrop-blur-[1px]
-              shadow-[0_1px_2px_oklch(0_0_0_/_0.1)]
-              dark:shadow-[0_1px_2px_oklch(0_0_0_/_0.25)]"
-              >
-                <tr className="text-left text-[var(--primary)] text-sm font-semibold">
-                  <th className="px-4 py-3 w-[110px]">
-                    <Sorting
-                      columnKey="fecha"
-                      sortConfig={sortConfig}
-                      setSortConfig={setSortConfig}
-                    >
-                      Date
-                    </Sorting>
-                  </th>
-                  <th className="px-4 py-3 w-[400px]">
-                    <Sorting
-                      columnKey="descripcion"
-                      sortConfig={sortConfig}
-                      setSortConfig={setSortConfig}
-                    >
-                      Description
-                    </Sorting>
-                  </th>
-                  <th className="px-4 py-3 text-right">
-                    <Sorting
-                      columnKey="monto"
-                      sortConfig={sortConfig}
-                      setSortConfig={setSortConfig}
-                    >
-                      Amount
-                    </Sorting>
-                  </th>
-                  <th className="px-4 py-3">
-                    <Sorting
-                      columnKey="forma_pago"
-                      sortConfig={sortConfig}
-                      setSortConfig={setSortConfig}
-                    >
-                      Payment method
-                    </Sorting>
-                  </th>
-                  <th className="px-4 py-3">
-                    <Sorting
-                      columnKey="categories(nombre)"
-                      sortConfig={sortConfig}
-                      setSortConfig={setSortConfig}
-                    >
-                      Category
-                    </Sorting>
-                  </th>
-                  <th className="px-4 py-3 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {error ? (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="text-center text-[var(--danger)] py-4 text-sm"
-                    >
-                      Error: {error.message}
-                    </td>
-                  </tr>
-                ) : expenses?.length > 0 ? (
-                  <ExpensesRows
-                    expenses={expenses}
-                    onEdit={(exp) =>
-                      setModal((m) => ({ ...m, editObject: exp }))
-                    }
-                    onDelete={(id) =>
-                      setModal((m) => ({ ...m, deleteObjectId: id }))
-                    }
-                    deleting={deleting}
-                  />
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="text-center py-4 text-[oklch(var(--foreground)/0.6)] text-sm italic"
-                    >
-                      No expenses found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          <Loader loading={loading} />
-        </div>
+
+        <CustomTable
+          header={
+            <ExpensesTableHeaders
+              sortConfig={sortConfig}
+              setSortConfig={setSortConfig}
+            />
+          }
+          body={
+            <ExpensesTableRows
+              expenses={expenses}
+              onEdit={(exp) => setModal((m) => ({ ...m, editObject: exp }))}
+              onDelete={(id) => setModal((m) => ({ ...m, deleteObjectId: id }))}
+              deleting={deleting}
+            />
+          }
+          loading={loading}
+          error={error}
+          emptyMessage="No expenses found"
+          colSpan={7}
+          hasRows={expenses?.length > 0}
+        />
+
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -181,19 +102,19 @@ function ExpensesTable({ filters }) {
           onClose={() => setModal((m) => ({ ...m, isInsert: false }))}
           primaryLabel={modal.insertLoading ? "Saving..." : "Save"}
           primaryDisabled={modal.insertLoading}
-          onPrimary={() => expenseFormRef.current?.submit()}
+          onPrimary={() => setTriggerInsert(true)}
           secondaryLabel="Cancel"
           primaryVariant="primary"
           secondaryVariant="secondary"
         >
           {modal.isInsert && (
             <ExpenseForm
-              ref={expenseFormRef}
-              onSuccess={() => {
+              triggerSubmit={triggerInsert}
+              onSubmitted={() => {
                 setModal((m) => ({ ...m, isInsert: false }));
                 reloadExpenses();
               }}
-              closeModal={() => setModal((m) => ({ ...m, isInsert: false }))}
+              onResetTrigger={() => setTriggerInsert(false)}
               onLoadingChange={handleInsertLoading}
             />
           )}
@@ -205,19 +126,19 @@ function ExpensesTable({ filters }) {
           onClose={() => setModal((m) => ({ ...m, editObject: null }))}
           primaryLabel={modal.editLoading ? "Updating..." : "Update"}
           primaryDisabled={modal.editLoading}
-          onPrimary={() => editFormRef.current?.submit()}
+          onPrimary={() => setTriggerEdit(true)}
           secondaryLabel="Cancel"
           primaryVariant="primary"
           secondaryVariant="secondary"
         >
           {!!modal.editObject && (
             <ExpenseForm
-              ref={editFormRef}
-              onSuccess={() => {
+              triggerSubmit={triggerEdit}
+              onSubmitted={() => {
                 setModal((m) => ({ ...m, editObject: null }));
                 reloadExpenses();
               }}
-              closeModal={() => setModal((m) => ({ ...m, editObject: null }))}
+              onResetTrigger={() => setTriggerEdit(false)}
               onLoadingChange={handleEditLoading}
               {...modal.editObject}
             />

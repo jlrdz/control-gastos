@@ -1,5 +1,5 @@
-import CustomSelect from "../Selects/CustomSelect";
-import { APP_CONFIG } from "../../config/appConfig";
+import CustomSelect from "../../Selects/CustomSelect";
+import { APP_CONFIG } from "../../../config/appConfig";
 import clsx from "clsx";
 
 export default function Pagination({

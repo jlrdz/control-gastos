@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useExpenseForm } from "../../../hooks/useExpenseForm";
 import Input from "../../Input";
 import CategorySelect from "../../Selects/CategorySelect";
@@ -6,29 +6,32 @@ import CurrencySelect from "../../Selects/CurrencySelect";
 import PaymentMethodSelect from "../../Selects/PaymentMethodSelect";
 import clsx from "clsx";
 
-const ExpenseForm = forwardRef(function ExpenseForm(
-  { onSuccess, closeModal, onLoadingChange, ...initialValues },
-  ref
-) {
+export default function ExpenseForm({
+  triggerSubmit,
+  onSubmitted,
+  onResetTrigger,
+  onLoadingChange,
+  ...initialValues
+}) {
   const { state, changeValue, handleSubmit, loading, error } = useExpenseForm(
     initialValues,
-    { onSuccess, closeModal }
+    { onSuccess: onSubmitted }
   );
 
   const formRef = useRef(null);
 
   useEffect(() => {
-    if (typeof onLoadingChange === "function") {
-      onLoadingChange(loading);
-    }
+    onLoadingChange?.(loading);
   }, [loading]);
 
-  useImperativeHandle(ref, () => ({
-    submit: () => {
-      if (formRef.current) formRef.current.requestSubmit();
-    },
-    loading,
-  }));
+  useEffect(() => {
+    if (triggerSubmit) {
+      if (formRef.current) {
+        formRef.current.requestSubmit();
+      }
+      onResetTrigger?.();
+    }
+  }, [triggerSubmit]);
 
   const handleSelectChange = (field) => (newValue) => {
     changeValue({ target: { name: field, value: newValue } });
@@ -166,6 +169,4 @@ const ExpenseForm = forwardRef(function ExpenseForm(
       )}
     </form>
   );
-});
-
-export default ExpenseForm;
+}
